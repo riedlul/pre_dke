@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h3>Ticketübersicht<h3>
+		<table>
+			<tr class="row">
+				<td>Von</td>
+				<td>Nach</td>
+				<td>Preis</td>
+				<td>Stornieren</td>
+			</tr>
+			{% for t in tickets %}
+			<tr class="ticket">
+				<td>{{t.von}}</td>
+				<td>{{t.nach}}</td>
+				<td>{{t.preis}}</td>
+				<td><a href="{{'cancel_ticket'}}/{{t.id}}"> stornieren</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+{% endblock %}

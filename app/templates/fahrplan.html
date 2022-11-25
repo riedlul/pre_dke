@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Fahrplan!</h1>
+	<p>
+	<table>
+		<tr>
+			<th>Von</th>
+			<th>Nach</th>
+			<th>Datum</th>
+			<th>Uhrzeit</th>
+			<th>Preis</th>
+			<th>Kaufen</th>
+		</tr>
+		<tr>
+			<td>Linz</td>
+			<td>Wien</td>
+			<td>13.12.2022</td>
+			<td>16:14</td>
+			<td>10€</td>
+			<td>
+			<form action = "{{ url_for('buyticket',von='Linz',nach='Wien',preis=10.0) }}" method = "post">
+				{{ form.hidden_tag() }}
+				{{ form.submit() }}
+			 </form>   
+			</td>
+		</tr>
+		<tr>
+			<td>Linz</td>
+			<td>Salzburg</td>
+			<td>15.12.2022</td>
+			<td>20:36</td>
+			<td>8€</td>
+			<td>
+				<form action = "{{ url_for('buyticket',von='Linz',nach='Salzburg',preis=8.0) }}" method = "post">
+					{{ form.hidden_tag() }}
+					{{ form.submit() }}
+				 </form>   
+			</td>
+		</tr>
+		
+	</table> 
+{% endblock %}
