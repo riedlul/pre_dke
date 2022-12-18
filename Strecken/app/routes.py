@@ -113,10 +113,10 @@ def delete_a(abschnitt_id):
     abschnitt = Abschnitt.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
 
-@app.route('/edit_mitarbeiter/<int:abschnitt_id>', methods=['GET', 'POST'])
-def edit_mitarbeiter(mitarbeiter_id):
+@app.route('/edit_mitarbeiter/<int:ma_id>', methods=['GET', 'POST'])
+def edit_mitarbeiter(ma_id):
     form = mitarbeiterFormBearbeiten()
-    mitarbeiterBearbeiten = Mitarbeiter.query.get(mitarbeiter_id)
+    mitarbeiterBearbeiten = Mitarbeiter.query.get(ma_id)
     if form.validate_on_submit():
         mitarbeiterBearbeiten.firstname = form.firstname.data
         mitarbeiterBearbeiten.lastname = form.lastname.data
@@ -125,8 +125,9 @@ def edit_mitarbeiter(mitarbeiter_id):
         flash('Änderung gespeichert')
         return redirect('/mitarbeiter')
     elif request.method == 'GET':
-        form.name.data = mitarbeiterBearbeiten.firstname
-        form.address.data = mitarbeiterBearbeiten.lastname
+        form.firstname.data = mitarbeiterBearbeiten.firstname
+        form.lastname.data = mitarbeiterBearbeiten.lastname
+        form.birthday.data = mitarbeiterBearbeiten.birthday
     return render_template('bearbeiten_mitarbeiter.html', title='Mitarbeiter bearbeiten', user=current_user, form=form)
 
 @app.route('/mitarbeiter', methods=['GET', 'POST'])
@@ -148,9 +149,9 @@ def get_mitarbeiter():
     mitarbeiter = Mitarbeiter.query.all()
     return render_template("mitarbeiter.html", user=current_user, mitarbeiter=mitarbeiter)
 
-@app.route('/delete_mitarbeiter/<int:mitarbeiter_id>', methods=['GET', 'POST'])
-def delete_mitarbeiter(mitarbeiter_id):
-    mitarbeiterLöschen = Mitarbeiter.query.get(mitarbeiter_id)
+@app.route('/delete_mitarbeiter/<int:ma_id>', methods=['GET', 'POST'])
+def delete_mitarbeiter(ma_id):
+    mitarbeiterLöschen = Mitarbeiter.query.get(ma_id)
     db.session.delete(mitarbeiterLöschen)
     db.session.commit()
     mitarbeiter = Mitarbeiter.query.all()
