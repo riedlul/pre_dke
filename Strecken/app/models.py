@@ -113,3 +113,6 @@ class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
             "lastname",
             "birthday",
         )
+
+mitarbeiterSchema = MitarbeiterSchema()
+mitarbeiterSchema = MitarbeiterSchema(many=True)
