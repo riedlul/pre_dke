@@ -5,22 +5,31 @@
         <form method="POST">
           <br />
           <div class="form-group">
-            <label for="ma_birthday">neuer Mitarbeiter:</label></br>
+            <label for="ma_firstname">neuer Mitarbeiter:</label></br>
             <input
               type="text"
               class="form-control"
-              id="ts_birthday"
-              name="ts_name"
-              placeholder="Name"
+              id="ma_firstname"
+              name="ma_firstname"
+              placeholder="Vorname"
             />
           </div>
           <div class="form-group">
             <input
               type="text"
               class="form-control"
-              id="ts_address"
-              name="ts_address"
-              placeholder="Adresse"
+              id="ma_lastname"
+              name="ma_lastname"
+              placeholder="Nachname"
+            />
+          </div>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="ma_birthday"
+              name="ma_birthday"
+              placeholder="Geburtstag (Bsp.: 01011990)"
             />
           </div></br>
           <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
@@ -28,22 +37,22 @@
           <br />
         </form>
     <hr />
-    <u1 class="list-group list-group-flush" id="trainstation-list">
-        {% for ts in bahnhöfe %}
+    <u1 class="list-group list-group-flush" id="mitarbeiter-list">
+        {% for ma in mitarbeiter %}
             <li class="list-group-item">
                 <li>
-                    <span class="field-name">Bahnhof:</span>
-                    <span class="field-value">{{ ts.name }}</span>
+                    <span class="field-name">Mitarbeiter:</span>
+                    <span class="field-value">{{ ma.firstname }}</span>
                 </li>
                 <li>
-                    <span class="field-name">Adresse:</span>
-                    <span class="field-value">{{ ts.address }}</span>
+                    <span class="field-name">Geburtstag:</span>
+                    <span class="field-value">{{ ma.birthday }}</span>
                     <p>
-                        <a href="/edit_Bahnhöfe/{{ ts.id }}"
+                        <a href="/edit_mitarbeiter/{{ ma.id }}"
                            class="btn btn-primary btn-lg-active"
                            role="button" aria-pressed="true">BEARBEITEN |
                         </a>
-                        <a href="/delete_b/{{ ts.id }}"
+                        <a href="/delete_mitarbeiter/{{ ms.id }}"
                            class="btn btn-primary btn-lg-active"
                            role="button" aria-pressed="true">LÖSCHEN
                         </a>

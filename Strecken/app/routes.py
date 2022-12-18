@@ -2,11 +2,9 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import current_user, login_required
 
 from app import app
-from app.forms import LoginForm, bahnhofFormBearbeiten, abschnittFormBearbeiten
-from app.models import Bahnhof, Abschnitt
+from app.forms import LoginForm, bahnhofFormBearbeiten, abschnittFormBearbeiten, mitarbeiterFormBearbeiten
+from app.models import Bahnhof, Abschnitt, Mitarbeiter
 from . import db
-from .forms import mitarbeiterFormBearbeiten
-from .models import Mitarbeiter
 
 
 @app.route('/')
@@ -115,8 +113,8 @@ def delete_a(abschnitt_id):
     abschnitt = Abschnitt.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
 
-@app.route('/edit_Mitarbeiter/<int:abschnitt_id>', methods=['GET', 'POST'])
-def edit_Mitarbeiter(mitarbeiter_id):
+@app.route('/edit_mitarbeiter/<int:abschnitt_id>', methods=['GET', 'POST'])
+def edit_mitarbeiter(mitarbeiter_id):
     form = mitarbeiterFormBearbeiten()
     mitarbeiterBearbeiten = Mitarbeiter.query.get(mitarbeiter_id)
     if form.validate_on_submit():
