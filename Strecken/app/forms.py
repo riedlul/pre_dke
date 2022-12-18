@@ -30,3 +30,15 @@ class abschnittFormLöschen(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     address = StringField('Adresse', validators=[Length(min=1, max=150)])
     submit = SubmitField('löschen')
+
+class mitarbeiterFormBearbeiten(FlaskForm):
+    firstname = StringField('firstname', validators=[DataRequired()])
+    lastname = StringField('lastname', validators=[DataRequired()])
+    birthday = StringField('birthday', validators=[Length(min=1, max=150)])
+    submit = SubmitField('ok')
+
+class mitarbeiterFormLöschen(FlaskForm):
+    firstname = StringField('firstname', validators=[DataRequired()])
+    lastname = StringField('lastname', validators=[DataRequired()])
+    birthday = StringField('birthday', validators=[Length(min=1, max=150)])
+    submit = SubmitField('löschen')

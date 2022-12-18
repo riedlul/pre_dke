@@ -5,6 +5,8 @@ from app import app
 from app.forms import LoginForm, bahnhofFormBearbeiten, abschnittFormBearbeiten
 from app.models import Bahnhof, Abschnitt
 from . import db
+from .forms import mitarbeiterFormBearbeiten
+from .models import Mitarbeiter
 
 
 @app.route('/')
@@ -112,3 +114,46 @@ def delete_a(abschnitt_id):
     db.session.commit()
     abschnitt = Abschnitt.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
+
+@app.route('/edit_Mitarbeiter/<int:abschnitt_id>', methods=['GET', 'POST'])
+def edit_Mitarbeiter(mitarbeiter_id):
+    form = mitarbeiterFormBearbeiten()
+    mitarbeiterBearbeiten = Mitarbeiter.query.get(mitarbeiter_id)
+    if form.validate_on_submit():
+        mitarbeiterBearbeiten.firstname = form.firstname.data
+        mitarbeiterBearbeiten.lastname = form.lastname.data
+        mitarbeiterBearbeiten.birthday = form.birthday.data
+        db.session.commit()
+        flash('Änderung gespeichert')
+        return redirect('/mitarbeiter')
+    elif request.method == 'GET':
+        form.name.data = mitarbeiterBearbeiten.firstname
+        form.address.data = mitarbeiterBearbeiten.lastname
+    return render_template('bearbeiten_mitarbeiter.html', title='Mitarbeiter bearbeiten', user=current_user, form=form)
+
+@app.route('/mitarbeiter', methods=['GET', 'POST'])
+def get_mitarbeiter():
+    if request.method == 'POST':
+        ma_firstname = request.form.get('ma_firstname')
+        ma_lastname = request.form.get('ma_lastname')
+        ma_birthday = request.form.get('ma_birthday')
+
+        mitarbeiter = Mitarbeiter.query.filter_by(lastname=ma_lastname).first()
+        if mitarbeiter:
+            flash('Mitarbeiter existiert bereits', category='error')
+        else:
+            new_mitarbeiter = Mitarbeiter(firstname=ma_firstname, lastname=ma_lastname, birthday=ma_birthday)
+            db.session.add(new_mitarbeiter)
+            db.session.commit()
+            flash('Mitarbeiter HINZUGEFÜGT', category='success')
+
+    mitarbeiter = Mitarbeiter.query.all()
+    return render_template("mitarbeiter.html", user=current_user, mitarbeiter=mitarbeiter)
+
+@app.route('/delete_mitarbeiter/<int:mitarbeiter_id>', methods=['GET', 'POST'])
+def delete_mitarbeiter(mitarbeiter_id):
+    mitarbeiterLöschen = Mitarbeiter.query.get(mitarbeiter_id)
+    db.session.delete(mitarbeiterLöschen)
+    db.session.commit()
+    mitarbeiter = Mitarbeiter.query.all()
+    return render_template("mitarbeiter.html", user=current_user, mitarbeiter=mitarbeiter)

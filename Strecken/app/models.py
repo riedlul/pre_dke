@@ -92,3 +92,24 @@ class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
 
 abschnittSchema = AbschnittSchema()
 abschnitteSchema = AbschnittSchema(many=True)
+
+class Mitarbeiter(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(60), nullable=False)
+    lastname = db.Column(db.String(60), nullable=False)
+    birthday = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"Mitarbeiter(firstname {self.firstname}, lastname {self.lastname}, birthday {self.birthday})"
+
+#Schemas für API
+class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Benutzer
+        ordered = True
+        fields = (
+            "id",
+            "firstname",
+            "lastname",
+            "birthday",
+        )
