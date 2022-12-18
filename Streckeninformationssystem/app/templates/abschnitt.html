@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}abschnitt{% endblock %}
+{% block content %}
+    <h1 class="py-5">Abschnitte</h1>
+        <form method="POST">
+          <br />
+          <div class="form-group">
+            <label for="a_name">neuer Abschnitt:</label></br>
+            <input
+              type="text"
+              class="form-control"
+              id="a_name"
+              name="a_name"
+              placeholder="Bezeichnung Abschnitt"
+            />
+          </div>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_spurweite"
+              name="a_spurweite"
+              placeholder="Spurweite (meter)"
+            />
+          </div>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_maxGeschwindigkeit"
+              name="a_maxGeschwindigkeit"
+              placeholder="maximale Geschwindigkeit (km/h)"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_länge"
+              name="a_länge"
+              placeholder="Länge"
+            />
+          </div>
+            </br>
+          <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
+          <br />
+          <br />
+        </form>
+    <hr />
+    <u1 class="list-group list-group-flush" id="abschnitte-list">
+        {% for a in abschnitte %}
+            <li class="list-group-item">
+                <li>
+                    <span class="field-name">Abschnittr:</span>
+                    <span class="field-value">{{ a.name }}</span>
+                </li>
+                <li>
+                        <a href="/edit_Abschnitte/{{ ts.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">BEARBEITEN |
+                        </a>
+                        <a href="/delete_Abschnitte/{{ ts.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">LÖSCHEN
+                        </a>
+                    </p>
+                    </form>
+                    <hr />
+                    <br />
+                </li>
+            </form>
+
+            </li>
+        {% endfor %}
+    </u1>
+<br />
+{% endblock %}

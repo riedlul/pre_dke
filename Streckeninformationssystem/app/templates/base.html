@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Streckeninformationssystem</title>
+        {% else %}
+        <title>Streckeninfromationssystem</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>
+            Streckeninformationssystem:
+            <a class="nav-item nav-link" id="home" href="/">Home</a>
+            <a class="nav-item nav-link" id="login" href="/login">Login</a>
+            <a class="nav-item nav-link" id="bahnhof" href="/bahnhöfe">Bahnhof</a>
+            <a class="nav-item nav-link" id="abschnitt" href="/abschnitte">Abschnitt</a>
+            <a class="nav-item nav-link" id="strecken" href="/strecken">Strecken</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
