@@ -83,12 +83,12 @@ class Abschnitt(db.Model):
     länge = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"Abschnitt(name {self.name}, spurweite {self.spurweite}, maxGeschwindigkeit {self.maxGeschwindigkeit}, entgelt {self.entgelt}, länge {self.länge})"
+        return f'Abschnitt(name {self.name}, spurweite {self.spurweite}, maxGeschwindigkeit {self.maxGeschwindigkeit}, entgelt {self.entgelt}, länge {self.länge}) '
 
 
 class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
-        model = Bahnhof
+        model =Abschnitt
         ordered = True
         fields = (
             "id",

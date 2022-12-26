@@ -13,10 +13,12 @@ def index():
     user = {'username': 'Miguel'}
     return render_template('index.html', title='Home', user=user)
 
+
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     return render_template("home.html", user=current_user)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -25,7 +27,8 @@ def login():
         flash('Login requested for user {}, remember_me={}'.format(
             form.username.data, form.remember_me.data))
         return redirect(url_for('index'))
-    return render_template('login.html',  title='Sign In', form=form)
+    return render_template('login.html', title='Sign In', form=form)
+
 
 @app.route('/edit_Bahnhöfe/<int:trainstations_id>', methods=['GET', 'POST'])
 def edit_Bahnhöfe(trainstations_id):
@@ -41,6 +44,7 @@ def edit_Bahnhöfe(trainstations_id):
         form.name.data = bahnhofBearbeiten.name
         form.address.data = bahnhofBearbeiten.address
     return render_template('bearbeiten_bahnhof.html', title='Bahnhof bearbeiten', user=current_user, form=form)
+
 
 @app.route('/bahnhöfe', methods=['GET', 'POST'])
 def get_Bahnhöfe():
@@ -60,6 +64,7 @@ def get_Bahnhöfe():
     bahnhöfe = Bahnhof.query.all()
     return render_template("bahnhof.html", user=current_user, bahnhöfe=bahnhöfe)
 
+
 @app.route('/delete_b/<int:trainstations_id>', methods=['GET', 'POST'])
 def delete_b(trainstations_id):
     bahnhofBearbeiten2 = Bahnhof.query.get(trainstations_id)
@@ -67,6 +72,7 @@ def delete_b(trainstations_id):
     db.session.commit()
     bahnhöfe = Bahnhof.query.all()
     return render_template("bahnhof.html", user=current_user, bahnhöfe=bahnhöfe)
+
 
 @app.route('/edit_Abschnitt/<int:abschnitt_id>', methods=['GET', 'POST'])
 def edit_Abschnitt(abschnitt_id):
@@ -85,6 +91,7 @@ def edit_Abschnitt(abschnitt_id):
         form.address.data = abschnittBearbeiten.address
     return render_template('bearbeiten_abschnitt.html', title='Abschnitt bearbeiten', user=current_user, form=form)
 
+
 @app.route('/abschnitte', methods=['GET', 'POST'])
 def get_abschnitte():
     if request.method == 'POST':
@@ -98,13 +105,15 @@ def get_abschnitte():
         if abschnitt:
             flash('Abschnitt existiert bereits', category='error')
         else:
-            new_abschnitt = Abschnitt(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit, entgelt=a_entgelt, länge=a_länge)
+            new_abschnitt = Abschnitt(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit,
+                                      entgelt=a_entgelt, länge=a_länge)
             db.session.add(new_abschnitt)
             db.session.commit()
             flash('Abschnitt HINZUGEFÜGT', category='success')
 
     abschnitt = Abschnitt.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
+
 
 @app.route('/delete_a/<int:abschnitt_id>', methods=['GET', 'POST'])
 def delete_a(abschnitt_id):
@@ -113,6 +122,7 @@ def delete_a(abschnitt_id):
     db.session.commit()
     abschnitt = Abschnitt.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
+
 
 @app.route('/edit_mitarbeiter/<int:ma_id>', methods=['GET', 'POST'])
 def edit_mitarbeiter(ma_id):
@@ -130,6 +140,7 @@ def edit_mitarbeiter(ma_id):
         form.lastname.data = mitarbeiterBearbeiten.lastname
         form.birthday.data = mitarbeiterBearbeiten.birthday
     return render_template('bearbeiten_mitarbeiter.html', title='Mitarbeiter bearbeiten', user=current_user, form=form)
+
 
 @app.route('/mitarbeiter', methods=['GET', 'POST'])
 def get_mitarbeiter():
@@ -149,6 +160,7 @@ def get_mitarbeiter():
 
     mitarbeiter = Mitarbeiter.query.all()
     return render_template("mitarbeiter.html", user=current_user, mitarbeiter=mitarbeiter)
+
 
 @app.route('/delete_mitarbeiter/<int:ma_id>', methods=['GET', 'POST'])
 def delete_mitarbeiter(ma_id):

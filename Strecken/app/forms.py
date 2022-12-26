@@ -23,7 +23,7 @@ class abschnittFormBearbeiten(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     spurweite = StringField('Spurweite', validators=[Length(min=1, max=150)])
     maxGeschwindigkeit = StringField('maximale Geschwindigkeit', validators=[Length(min=1, max=150)])
-    entgelt = StringField('Entgelt', validators=[Length(min=1, max=100)])
+    entgelt = StringField('Entgelt', validators=[Length(min=1, max=150)])
     länge = StringField('Länge', validators=[Length(min=1, max=150)])
     submit = SubmitField('ok')
 
@@ -31,7 +31,7 @@ class abschnittFormLöschen(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     spurweite = StringField('Spurweite', validators=[Length(min=1, max=150)])
     maxGeschwindigkeit = StringField('maximale Geschwindigkeit', validators=[Length(min=1, max=150)])
-    entgelt = StringField('Entgelt', validators=[Length(min=1, max=100)])
+    entgelt = StringField('Entgelt', validators=[Length(min=1, max=150)])
     länge = StringField('Länge', validators=[Length(min=1, max=150)])
     submit = SubmitField('löschen')
 
