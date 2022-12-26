@@ -107,11 +107,20 @@ def get_abschnitte():
         a_endbahnhof = request.form.get('a_endbahnhof')
 
         abschnitt = Abschnitt.query.filter_by(name=a_name).first()
+        bahnhof = Bahnhof.query.filter_by(name=a_startbahnhof).first()
+        bahnhof2 = Bahnhof.query.filter_by(name=a_endbahnhof).first()
+
+        if a_startbahnhof == a_endbahnhof:
+            flash('Startbahnhof ist gleich Endbahnhof', category='error')
+        if bahnhof==False:
+            flash('Startbahnhof existiert nicht', category='error')
+        if bahnhof2==False:
+            flash('Startbahnhof existiert nicht', category='error')
         if abschnitt:
             flash('Abschnitt existiert bereits', category='error')
         else:
             new_abschnitt = Abschnitt(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit,
-                                      entgelt=a_entgelt, länge=a_länge, startbahnhof=a_startbahnhof, endbahnhof=a_endbahnhof )
+                                      entgelt=a_entgelt, länge=a_länge, startbahnhof=a_startbahnhof, endbahnhof=a_endbahnhof)
             db.session.add(new_abschnitt)
             db.session.commit()
             flash('Abschnitt HINZUGEFÜGT', category='success')

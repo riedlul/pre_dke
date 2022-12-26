@@ -73,6 +73,35 @@
           <br />
           <br />
     </form>
-</form>
+<hr />
+    <u1 class="list-group list-group-flush" id="abschnitt-list">
+        {% for a in abschnitte %}
+            <li class="list-group-item">
+                <li>
+                    <span class="field-name">Abschnitt:</span>
+                    <span class="field-value">{{ a.name }}</span>
+                </li>
+                <li>
+                    <span class="field-name">Entgelt:</span>
+                    <span class="field-value">{{ a.entgelt }}</span>
+                    <p>
+                        <a href="/edit_Abschnitt/{{ a.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">BEARBEITEN |
+                        </a>
+                        <a href="/delete_a/{{ a.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">LÖSCHEN
+                        </a>
+                    </p>
+                    </form>
+                    <hr />
+                    <br />
+                </li>
+            </form>
+
+            </li>
+        {% endfor %}
+    </u1>
 <br />
 {% endblock %}
