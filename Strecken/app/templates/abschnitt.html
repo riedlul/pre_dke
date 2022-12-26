@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "bahnhof.html" %}
 {% block title %}abschnitt{% endblock %}
 {% block content %}
     <h1 class="py-5">Abschnitte</h1>
@@ -32,7 +32,7 @@
               placeholder="maximale Geschwindigkeit (km/h)"
             />
           </div>
-            div class="form-group">
+            <div class="form-group">
             <input
               type="text"
               class="form-control"
@@ -50,37 +50,29 @@
               placeholder="Länge (m)"
             />
           </div>
-            </br>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_starbahnhof"
+              name="a_startbahnhof"
+              placeholder="Startbahnhof"
+            />
+          </div>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_endbahnhof"
+              name="a_endbahnhof"
+              placeholder="Endbahnhof"
+            />
+          </div>
+        </br>
           <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
           <br />
           <br />
-        </form>
-    <hr />
-    <u1 class="list-group list-group-flush" id="abschnitte-list">
-        {% for a in abschnitte %}
-            <li class="list-group-item">
-                <li>
-                    <span class="field-name">Abschnittr:</span>
-                    <span class="field-value">{{ a.name }}</span>
-                </li>
-                <li>
-                        <a href="/edit_Abschnitte/{{ ts.id }}"
-                           class="btn btn-primary btn-lg-active"
-                           role="button" aria-pressed="true">BEARBEITEN |
-                        </a>
-                        <a href="/delete_Abschnitte/{{ ts.id }}"
-                           class="btn btn-primary btn-lg-active"
-                           role="button" aria-pressed="true">LÖSCHEN
-                        </a>
-                    </p>
-                    </form>
-                    <hr />
-                    <br />
-                </li>
-            </form>
-
-            </li>
-        {% endfor %}
-    </u1>
+    </form>
+</form>
 <br />
 {% endblock %}
