@@ -25,6 +25,7 @@ class abschnittFormBearbeiten(FlaskForm):
     maxGeschwindigkeit = StringField('maximale Geschwindigkeit', validators=[Length(min=1, max=150)])
     entgelt = StringField('Entgelt', validators=[Length(min=1, max=150)])
     länge = StringField('Länge', validators=[Length(min=1, max=150)])
+    startbahnhof =StringField('Startbahnhof', validators=[])
     submit = SubmitField('ok')
 
 class abschnittFormLöschen(FlaskForm):

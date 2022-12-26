@@ -81,9 +81,11 @@ class Abschnitt(db.Model):
     maxGeschwindigkeit = db.Column(db.Integer, nullable=False)
     entgelt = db.Column(db.Integer, nullable=False)
     länge = db.Column(db.Integer, nullable=False)
+    startbahnhof = db.Column(db.String, nullable=False)
+    endbahnhof = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return f'Abschnitt(name {self.name}, spurweite {self.spurweite}, maxGeschwindigkeit {self.maxGeschwindigkeit}, entgelt {self.entgelt}, länge {self.länge}) '
+        return f'Abschnitt(name {self.name}, spurweite {self.spurweite}, maxGeschwindigkeit {self.maxGeschwindigkeit}, entgelt {self.entgelt}, länge {self.länge}, startbahnhof {self.startbahnhof}, endbahnhof {self.endbahnhof}) '
 
 
 class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
@@ -96,7 +98,9 @@ class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
             "spurweite",
             "maxGeschwindigkeit",
             "entgelt",
-            "länge"
+            "länge",
+            "startbahnhof",
+            "endbahnhof"
         )
 
 

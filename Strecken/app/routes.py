@@ -83,6 +83,9 @@ def edit_Abschnitt(abschnitt_id):
         abschnittBearbeiten.länge = form.länge.data
         abschnittBearbeiten.spurweite = form.spurweite.data
         abschnittBearbeiten.maxGeschwind = form.maxGeschwindigkeit.data
+        abschnittBearbeiten.entgelt = form.entgelt.data
+        abschnittBearbeiten.startbahnhof = form.startbahnhof.data
+        abschnittBearbeiten.endbahnhof = form.endbahnhof.data
         db.session.commit()
         flash('Änderung gespeichert')
         return redirect('/abschnitte')
@@ -100,13 +103,15 @@ def get_abschnitte():
         a_maxGeschwindigkeit = request.form.get('a_maxGeschwindigkeit')
         a_entgelt = request.form.get('a_entgelt')
         a_länge = request.form.get('a_länge')
+        a_startbahnhof = request.form.get('a_startbahnhof')
+        a_endbahnhof = request.form.get('a_endbahnhof')
 
         abschnitt = Abschnitt.query.filter_by(name=a_name).first()
         if abschnitt:
             flash('Abschnitt existiert bereits', category='error')
         else:
             new_abschnitt = Abschnitt(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit,
-                                      entgelt=a_entgelt, länge=a_länge)
+                                      entgelt=a_entgelt, länge=a_länge, startbahnhof=a_startbahnhof, endbahnhof=a_endbahnhof )
             db.session.add(new_abschnitt)
             db.session.commit()
             flash('Abschnitt HINZUGEFÜGT', category='success')
