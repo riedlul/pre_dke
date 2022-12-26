@@ -91,13 +91,14 @@ def get_abschnitte():
         a_name = request.form.get('a_name')
         a_spurweite = request.form.get('a_spurweite')
         a_maxGeschwindigkeit = request.form.get('a_maxGeschwindigkeit')
+        a_entgelt = request.form.get('a_entgelt')
         a_länge = request.form.get('a_länge')
 
         abschnitt = Abschnitt.query.filter_by(name=a_name).first()
         if abschnitt:
             flash('Abschnitt existiert bereits', category='error')
         else:
-            new_abschnitt = Abschnitt(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit, länge=a_länge)
+            new_abschnitt = Abschnitt(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit, entgelt=a_entgelt, länge=a_länge)
             db.session.add(new_abschnitt)
             db.session.commit()
             flash('Abschnitt HINZUGEFÜGT', category='success')
@@ -107,8 +108,8 @@ def get_abschnitte():
 
 @app.route('/delete_a/<int:abschnitt_id>', methods=['GET', 'POST'])
 def delete_a(abschnitt_id):
-    abschnittBearbeiten2 = Abschnitt.query.get(abschnitt_id)
-    db.session.delete(abschnittBearbeiten2)
+    abschnittlöschen = Abschnitt.query.get(abschnitt_id)
+    db.session.delete(abschnittlöschen)
     db.session.commit()
     abschnitt = Abschnitt.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
