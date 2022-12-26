@@ -25,6 +25,7 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
+
 class Benutzer(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
@@ -32,6 +33,7 @@ class Benutzer(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
     admin = db.Column(db.Boolean, default=False)
+
 
 class Bahnhof(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,7 +43,8 @@ class Bahnhof(db.Model):
     def __repr__(self):
         return f"Bahnhof(name {self.name}, address {self.address})"
 
-#Schemas für API
+
+# Schemas für API
 class BahnhofSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
         model = Benutzer
@@ -51,8 +54,10 @@ class BahnhofSchema(marsh.SQLAlchemyAutoSchema):
             "email",
         )
 
+
 user_schema = BahnhofSchema()
 users_schema = BahnhofSchema(many=True)
+
 
 class TrainstationSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
@@ -64,8 +69,10 @@ class TrainstationSchema(marsh.SQLAlchemyAutoSchema):
             "address"
         )
 
+
 bahnhofSchema = TrainstationSchema()
 bahnhöfeSchema = TrainstationSchema(many=True)
+
 
 class Abschnitt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -92,8 +99,10 @@ class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
             "länge"
         )
 
+
 abschnittSchema = AbschnittSchema()
 abschnitteSchema = AbschnittSchema(many=True)
+
 
 class Mitarbeiter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -104,7 +113,8 @@ class Mitarbeiter(db.Model):
     def __repr__(self):
         return f"Mitarbeiter(firstname {self.firstname}, lastname {self.lastname}, birthday {self.birthday})"
 
-#Schemas für API
+
+# Schemas für API
 class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
         model = Benutzer
@@ -115,6 +125,7 @@ class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
             "lastname",
             "birthday",
         )
+
 
 mitarbeiterSchema = MitarbeiterSchema()
 mitarbeiterSchema = MitarbeiterSchema(many=True)
