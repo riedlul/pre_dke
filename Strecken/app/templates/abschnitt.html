@@ -1,11 +1,14 @@
 {% extends "bahnhof.html" %}
 {% block title %}abschnitt{% endblock %}
 {% block content %}
+<div class="container">
     <h1 class="py-5">Abschnitte</h1>
+
         <form method="POST">
           <br />
           <div class="form-group">
-            <label for="a_name">neuer Abschnitt:</label></br>
+            <label for="a_name">neuer Abschnitt:</label>
+              </br>
             <input
               type="text"
               class="form-control"
@@ -51,22 +54,20 @@
             />
           </div>
             <div class="form-group">
-            <input
-              type="text"
-              class="form-control"
-              id="a_starbahnhof"
-              name="a_startbahnhof"
-              placeholder="Startbahnhof"
-            />
+                <label for="sec_start">Startbahnhof wählen:</label>
+                    <select id="sec_start" name="sec_start" class="form-control">
+                    {% for ts in bahnhöfe %}
+                    <option value="{{ ts.id }}">{{ ts.name }} - {{ ts.address }}</option>
+                    {% endfor %}
+                    </select>
           </div>
             <div class="form-group">
-            <input
-              type="text"
-              class="form-control"
-              id="a_endbahnhof"
-              name="a_endbahnhof"
-              placeholder="Endbahnhof"
-            />
+                <label for="sec_end">Endbahnhof wählen:</label>
+                    <select id="sec_end" name="sec_end" class="form-control">
+                    {% for ts in bahnhöfe %}
+                    <option value="{{ ts.id }}">{{ ts.name }} - {{ ts.address }}</option>
+                    {% endfor %}
+                    </select>
           </div>
         </br>
           <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
@@ -74,7 +75,7 @@
           <br />
     </form>
 <hr />
-    <u1 class="list-group list-group-flush" id="abschnitt-list">
+    <u1 class="list-group list-group-flush" id="abschnitte-list">
         {% for a in abschnitte %}
             <li class="list-group-item">
                 <li>
@@ -103,5 +104,6 @@
             </li>
         {% endfor %}
     </u1>
+    </dif>
 <br />
 {% endblock %}
