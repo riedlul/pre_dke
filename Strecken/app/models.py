@@ -82,9 +82,9 @@ class Abschnitt(db.Model):
     entgelt = db.Column(db.Integer, nullable=False)
     länge = db.Column(db.Integer, nullable=False)
     startbahnhof = db.relationship('Bahnhof', foreign_keys='Abschnitt.start_id')
-    start_id = db.Column(db.Integer, db.ForeignKey('bahnhof_model.id'))
+    start_id = db.Column(db.Integer, db.ForeignKey('bahnhof.id'))
     endbahnhof = db.relationship('Bahnhof', foreign_keys='Abschnitt.end_id')
-    end_id = db.Column(db.Integer, db.ForeignKey('bahnhof_model.id'))
+    end_id = db.Column(db.Integer, db.ForeignKey('bahnhof.id'))
 
     def __repr__(self):
         return f'Abschnitt(name {self.name}, spurweite {self.spurweite}, maxGeschwindigkeit {self.maxGeschwindigkeit}, entgelt {self.entgelt}, länge {self.länge}, startbahnhof {self.startbahnhof}, endbahnhof {self.endbahnhof}) '
