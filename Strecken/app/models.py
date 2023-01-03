@@ -81,8 +81,10 @@ class Abschnitt(db.Model):
     maxGeschwindigkeit = db.Column(db.Integer, nullable=False)
     entgelt = db.Column(db.Integer, nullable=False)
     länge = db.Column(db.Integer, nullable=False)
-    startbahnhof = db.Column(db.String, nullable=False)
-    endbahnhof = db.Column(db.String, nullable=False)
+    startbahnhof = db.relationship('Bahnhof', foreign_keys='Abschnitt.start_id')
+    start_id = db.Column(db.Integer, db.ForeignKey('bahnhof_model.id'))
+    endbahnhof = db.relationship('Bahnhof', foreign_keys='Abschnitt.end_id')
+    end_id = db.Column(db.Integer, db.ForeignKey('bahnhof_model.id'))
 
     def __repr__(self):
         return f'Abschnitt(name {self.name}, spurweite {self.spurweite}, maxGeschwindigkeit {self.maxGeschwindigkeit}, entgelt {self.entgelt}, länge {self.länge}, startbahnhof {self.startbahnhof}, endbahnhof {self.endbahnhof}) '
@@ -118,7 +120,6 @@ class Mitarbeiter(db.Model):
         return f"Mitarbeiter(firstname {self.firstname}, lastname {self.lastname}, birthday {self.birthday})"
 
 
-# Schemas für API
 class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
         model = Benutzer
