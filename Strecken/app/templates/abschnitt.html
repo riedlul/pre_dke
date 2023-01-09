@@ -54,8 +54,8 @@
             />
           </div>
             <div class="form-group">
-                <label for="sec_start">Startbahnhof wählen:</label>
-                    <select id="sec_start" name="sec_start" class="form-control">
+                <label for="a_start">Startbahnhof wählen:</label>
+                    <select id="a_start" name="a_start" class="form-control">
                     {% for ts in bahnhöfe %}
                     <option value="{{ ts.id }}">{{ ts.name }} - {{ ts.address }}</option>
                     {% endfor %}
