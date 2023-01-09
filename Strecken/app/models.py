@@ -1,6 +1,6 @@
 from datetime import datetime
 import sqlalchemy as sa
-
+from marshmallow_sqlalchemy.fields import Nested
 from flask_login import UserMixin
 
 from app import db, marsh
@@ -155,6 +155,9 @@ warning_schema = WarningSchema()
 warnings_schema = WarningSchema(many=True)
 
 class SectionSchema(marsh.SQLAlchemyAutoSchema):
+    start = Nested(TrainstationSchema)
+    end = Nested(TrainstationSchema)
+    section_warnings = Nested(WarningSchema, many=True)
     class Meta:
         model = SectionModel
         ordered = True
@@ -175,6 +178,9 @@ section_schema = SectionSchema()
 sections_schema = SectionSchema(many=True)
 
 class RouteSchema(marsh.SQLAlchemyAutoSchema):
+    start = Nested(TrainstationSchema)
+    end = Nested(TrainstationSchema)
+    route_sections = Nested(SectionSchema, many=True)
     class Meta:
         model = RouteModel
         ordered = True
@@ -218,3 +224,24 @@ class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
 
 mitarbeiterSchema = MitarbeiterSchema()
 mitarbeiterSchema = MitarbeiterSchema(many=True)
+
+# Additional Warning Schema
+# This workaround is necessary because WarningSchema
+# is needed before in the SectionSchema and
+# WarningSchemaSection has a nested SectionSchema
+class WarningSchemaSection(marsh.SQLAlchemyAutoSchema):
+    section = Nested(SectionSchema)
+
+    class Meta:
+        model = WarningModel
+        ordered = True
+        fields = (
+            "id",
+            "warnings",
+            "section_id",
+            "section"
+        )
+
+
+warning_section_schema = WarningSchemaSection()
+warnings_section_schema = WarningSchemaSection(many=True)
