@@ -102,8 +102,9 @@ mitarbeiterSchema = MitarbeiterSchema(many=True)
 class AbschnittModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
-    startbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittMoodel.start_id')
     start_id = db.Column(db.Integer, db.ForeignKey('Bahnhof.id'))
+    startbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittMoodel.start_id')
+
     end_id = db.Column(db.Integer, db.ForeignKey('Bahnhof.id'))
     endbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittModel.end_id')
 
@@ -126,6 +127,29 @@ sections = db.Table('abschnittModel',
                     db.Column('route_model_id', db.Integer, db.ForeignKey('route_model.id'), primary_key=True)
                     )
 
+
+class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
+    class Meta:
+        model = AbschnittModel
+
+    ordered = True
+    fields = (
+        "id",
+        "name",
+        "startbahnhof",
+        "start_id",
+        "endbahnhof",
+        "end_id",
+        "entgelt",
+        "spurweite",
+        "maxGeschwindigkeit",
+        "länge",
+        "section_warnings"
+    )
+
+
+abschnitt_schema = AbschnittSchema()
+abschnitt_schema = AbschnittSchema(many=True)
 
 class WarningModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -153,27 +177,7 @@ class WarningSchema(marsh.SQLAlchemyAutoSchema):
 warning_schema = WarningSchema()
 warnings_schema = WarningSchema(many=True)
 
-class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
-        class Meta:
-        model = AbschnittModel
-        ordered = True
-        fields = (
-            "id",
-            "name",
-            "startbahnhof",
-            "start_id",
-            "endbahnhof",
-            "end_id",
-            "entgelt",
-            "spurweite",
-            "maxGeschwindigkeit",
-            "länge",
-            "section_warnings"
-        )
 
-
-abschnitt_schema = AbschnittSchema()
-abschnitt_schema = AbschnittSchema(many=True)
 
 
 
