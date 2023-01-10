@@ -3,9 +3,8 @@ from flask_login import current_user, login_required
 
 from app import app
 from app.forms import LoginForm, bahnhofFormBearbeiten, abschnittFormBearbeiten, mitarbeiterFormBearbeiten
-from app.models import Bahnhof, SectionModel, Mitarbeiter, WarningsModel
+from app.models import Bahnhof, AbschnittModel, Mitarbeiter, WarningModel
 from . import db
-from .models import Abschnitt
 
 
 @app.route('/')
