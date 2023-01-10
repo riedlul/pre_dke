@@ -101,22 +101,26 @@ class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
 mitarbeiterSchema = MitarbeiterSchema()
 mitarbeiterSchema = MitarbeiterSchema(many=True)
 
+class WarningModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    warnings = db.Column(db.String(1000), nullable=False)
+    warning_section = db.Column(db.String(100), db.ForeignKey('AbschnittModel.id'))
 
+    def __repr__(self):
+        return {"id": self.id,
+                "warnings": self.warnings,
+                "warning_section": self.warning_section,
+                }
 class AbschnittModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    start_id = db.Column(db.Integer, db.ForeignKey('start_id.id'))
-    startbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittModel.start_id')
-
-    end_id = db.Column(db.Integer, db.ForeignKey('Bahnhof.id'))
-    endbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittModel.end_id')
+    startbahnhof = db.Column(db.String(100), db.ForeignKey('Bahnhof.id'))
+    endbahnhof = db.Column(db.String(100), db.ForeignKey('Bahnhof.id'))
 
     länge = db.Column(db.String(100), nullable=False)
     spurweite = db.Column(db.Integer, nullable=False)
     entgelt = db.Column(db.Integer, nullable=False)
     maxGeschwindigkeit = db.Column(db.Integer, nullable=False)
-    section_warnings = db.relationship('WarningModel',
-                                       lazy='joined',
-                                       backref=db.backref('section', lazy='joined'))
+    section_warnings = db.Column(db.String(100), db.ForeignKey('WarningModel.id'))
 
     def __repr__(self):
         return f"Abschnitt(name {self.name}, startbahnhof {self.startbahnhof}, endbahnhof {self.endbahnhof}, länge {self.track}, " \
@@ -153,18 +157,7 @@ class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
 abschnitt_schema = AbschnittSchema()
 abschnitt_schema = AbschnittSchema(many=True)
 
-class WarningModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    warnings = db.Column(db.String(1000), nullable=False)
-    warning_section = db.relationship('SectionModel', foreign_keys='WarningModel.section_id')
-    section_id = db.Column(db.Integer, db.ForeignKey('section_model.id'))
 
-    def __repr__(self):
-        return {"id": self.id,
-                "warnings": self.warnings,
-                "warning_section": self.warning_section,
-                "section_id": self.section_id
-                }
 
 class WarningSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
