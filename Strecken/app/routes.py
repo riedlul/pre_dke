@@ -77,7 +77,7 @@ def delete_b(trainstations_id):
 @app.route('/edit_Abschnitt/<int:abschnitt_id>', methods=['GET', 'POST'])
 def edit_Abschnitt(abschnitt_id):
     form = abschnittFormBearbeiten()
-    abschnittBearbeiten = Abschnitt.query.get(abschnitt_id)
+    abschnittBearbeiten = AbschnittModel.query.get(abschnitt_id)
     if form.validate_on_submit():
         abschnittBearbeiten.name = form.name.data
         abschnittBearbeiten.länge = form.länge.data
@@ -131,10 +131,10 @@ def get_abschnitte():
 
 @app.route('/delete_a/<int:abschnitt_id>', methods=['GET', 'POST'])
 def delete_a(abschnitt_id):
-    abschnittlöschen = Abschnitt.query.get(abschnitt_id)
+    abschnittlöschen = AbschnittModel.query.get(abschnitt_id)
     db.session.delete(abschnittlöschen)
     db.session.commit()
-    abschnitt = Abschnitt.query.all()
+    abschnitt = AbschnittModel.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
 
 

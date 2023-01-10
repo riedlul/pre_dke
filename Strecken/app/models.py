@@ -126,13 +126,6 @@ class AbschnittModel(db.Model):
                f"entgelt {self.entgelt}, maxGeschwindigkeit {self.maxGeschwindigkeit}, section_warnings {self.section_warnings}"
 
 
-# Association between Section and Route (Many-to-Many Relationship)
-sections = db.Table('abschnitt',
-                    db.Column('abschnitt_model_id', db.Integer, db.ForeignKey('abschnitt_model.id'), primary_key=True),
-                    db.Column('route_model_id', db.Integer, db.ForeignKey('route_model.id'), primary_key=True)
-                    )
-
-
 class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
         model = AbschnittModel
