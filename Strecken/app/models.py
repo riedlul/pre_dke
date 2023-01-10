@@ -1,4 +1,7 @@
 from datetime import datetime
+from sqlalchemy import ForeignKey
+from marshmallow_sqlalchemy.fields import Nested
+from sqlalchemy.sql import func
 
 from flask_login import UserMixin
 
@@ -101,9 +104,8 @@ mitarbeiterSchema = MitarbeiterSchema(many=True)
 
 class AbschnittModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), nullable=False)
-    start_id = db.Column(db.Integer, db.ForeignKey('Bahnhof.id'))
-    startbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittMoodel.start_id')
+    start_id = db.Column(db.Integer, db.ForeignKey('start_id.id'))
+    startbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittModel.start_id')
 
     end_id = db.Column(db.Integer, db.ForeignKey('Bahnhof.id'))
     endbahnhof = db.relationship('Bahnhof', foreign_keys='AbschnittModel.end_id')
