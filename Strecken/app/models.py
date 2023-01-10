@@ -1,6 +1,5 @@
 from datetime import datetime
 from sqlalchemy import ForeignKey
-from marshmallow_sqlalchemy.fields import Nested
 from sqlalchemy.sql import func
 
 from flask_login import UserMixin
@@ -123,7 +122,7 @@ class AbschnittModel(db.Model):
     section_warnings = db.Column(db.String(100), db.ForeignKey('WarningModel.id'))
 
     def __repr__(self):
-        return f"Abschnitt(name {self.name}, startbahnhof {self.startbahnhof}, endbahnhof {self.endbahnhof}, länge {self.track}, " \
+        return f"Abschnitt(startbahnhof {self.startbahnhof}, endbahnhof {self.endbahnhof}, länge {self.track}, " \
                f"entgelt {self.entgelt}, maxGeschwindigkeit {self.maxGeschwindigkeit}, section_warnings {self.section_warnings}"
 
 
