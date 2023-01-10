@@ -179,7 +179,6 @@ abschnitt_schema = AbschnittSchema(many=True)
 
 
 class WarningSchemaSection(marsh.SQLAlchemyAutoSchema):
-    section = Nested(AbschnittSchema)
 
     class Meta:
         model = WarningModel
