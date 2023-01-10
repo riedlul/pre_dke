@@ -127,7 +127,7 @@ class AbschnittModel(db.Model):
 
 
 # Association between Section and Route (Many-to-Many Relationship)
-sections = db.Table('abschnittModel',
+sections = db.Table('abschnitt',
                     db.Column('abschnitt_model_id', db.Integer, db.ForeignKey('abschnitt_model.id'), primary_key=True),
                     db.Column('route_model_id', db.Integer, db.ForeignKey('route_model.id'), primary_key=True)
                     )

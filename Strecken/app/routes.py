@@ -106,7 +106,7 @@ def get_abschnitte():
         a_startbahnhof = request.form.get('a_startbahnhof')
         a_endbahnhof = request.form.get('a_endbahnhof')
 
-        abschnitt = Abschnitt.query.filter_by(name=a_name).first()
+        abschnitt = AbschnittModel.query.filter_by(name=a_name).first()
         bahnhof = Bahnhof.query.filter_by(name=a_startbahnhof).first()
         bahnhof2 = Bahnhof.query.filter_by(name=a_endbahnhof).first()
 
@@ -119,13 +119,13 @@ def get_abschnitte():
         if abschnitt:
             flash('Abschnitt existiert bereits', category='error')
         else:
-            new_abschnitt = Abschnitt(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit,
+            new_abschnitt = AbschnittModel(name=a_name, spurweite=a_spurweite, maxGeschwindigkeit=a_maxGeschwindigkeit,
                                       entgelt=a_entgelt, länge=a_länge, startbahnhof=a_startbahnhof, endbahnhof=a_endbahnhof)
             db.session.add(new_abschnitt)
             db.session.commit()
             flash('Abschnitt HINZUGEFÜGT', category='success')
 
-    abschnitt = Abschnitt.query.all()
+    abschnitt = AbschnittModel.query.all()
     return render_template("abschnitt.html", user=current_user, abschnitt=abschnitt)
 
 
