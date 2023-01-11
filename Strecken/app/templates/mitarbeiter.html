@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}mitarbeiter{% endblock %}
+{% block content %}
+    <h1 class="py-5">Mitarbeiterverwaltung</h1>
+        <form method="POST">
+          <br />
+          <div class="form-group">
+            <label for="ma_firstname">neuer Mitarbeiter:</label></br>
+            <input
+              type="text"
+              class="form-control"
+              id="ma_firstname"
+              name="ma_firstname"
+              placeholder="Vorname"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="ma_lastname"
+              name="ma_lastname"
+              placeholder="Nachname"
+            />
+          </div>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="ma_birthday"
+              name="ma_birthday"
+              placeholder="Geburtstag (Bsp.: 01011990)"
+            />
+          </div></br>
+          <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
+          <br />
+          <br />
+        </form>
+    <hr />
+    <u1 class="list-group list-group-flush" id="mitarbeiter-list">
+        {% for ma in mitarbeiter %}
+            <li class="list-group-item">
+                <li>
+                    <span class="field-name">Mitarbeiter:</span>
+                    <span class="field-value">{{ ma.firstname }} {{ ma.lastname }}</span>
+                </li>
+                <li>
+                    <span class="field-name">Geburtstag:</span>
+                    <span class="field-value">{{ ma.birthday }}</span>
+                    <p>
+                        <a href="/edit_mitarbeiter/{{ ma.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">BEARBEITEN |
+                        </a>
+                        <a href="/delete_mitarbeiter/{{ ma.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">LÖSCHEN
+                        </a>
+                    </p>
+                    </form>
+                    <hr />
+                    <br />
+                </li>
+            </form>
+
+            </li>
+        {% endfor %}
+    </u1>
+<br />
+{% endblock %}
