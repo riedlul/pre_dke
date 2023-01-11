@@ -7,13 +7,19 @@
 				<td>Von</td>
 				<td>Nach</td>
 				<td>Preis</td>
+				<td>Status</td>
+				<td>Abfahrt</td>
+				<td>Ankunft</td>
 				<td>Stornieren</td>
 			</tr>
 			{% for t in tickets %}
 			<tr class="ticket">
-				<td>{{t.von}}</td>
-				<td>{{t.nach}}</td>
-				<td>{{t.preis}}</td>
+				<td>{{t.ticket_startStation}}</td>
+				<td>{{t.ticket_endStation}}</td>
+				<td>{{t.ticket_preis}}</td>
+				<td>{{t.ticket_status}}</td>
+				<td>{{t.fahrtdurchführung_startDatum}}</td>
+				<td>{{t.fahrtdurchführung_endDatum}}</td>
 				<td><a href="{{'cancel_ticket'}}/{{t.id}}"> stornieren</a></td>
 			</tr>
 			{% endfor %}

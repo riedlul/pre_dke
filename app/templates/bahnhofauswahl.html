@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="form-inline" method="POST" action="{{ url_for('fahrplan') }}">
+    <div class="form-group">
+      <div class="input-group">
+          <span class="input-group-addon">Please select</span>
+              <select name="sbhf" class="selectpicker form-control">
+                {% for b in bhfe %}
+                    <option value="{{ b }}">{{ b }}</option>
+                {% endfor %}
+              </select>
+              <select name="ebhf" class="selectpicker form-control">
+                {% for b in bhfe %}
+                    <option value="{{ b }}">{{ b }}</option>
+                {% endfor %}
+              </select>
+              <p>
+                {{ form.start_date.label }}<br>
+                {{ form.start_date(style='height: 25px;width: 115px') }}<br>
+              </p>
+      </div>
+      <button type="submit" class="btn btn-default">Go</button>
+    </div>
+  </form>
+  
+{% endblock %}

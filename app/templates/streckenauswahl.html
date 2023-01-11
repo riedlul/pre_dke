@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="account">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.strecke.label }}<br>
+            {{ form.strecke() }}<br>
+            {% for error in form.strecke.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit()}}</p>
+    </form>
+</div>
+{% endblock %}
