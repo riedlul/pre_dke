@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-{% block title %}mitarbeiter{% endblock %}
+{% block title %}Mitarbeiter{% endblock %}
 {% block content %}
-    <h1 class="py-5">Mitarbeiterverwaltung</h1>
+<h1 class="py-5">Mitarbeiter</h1>
+    {% if current_user.admin == True %}
+    <br />
         <form method="POST">
-          <br />
+          <label>neuer Mitarbeiter:</label></br>
           <div class="form-group">
-            <label for="ma_firstname">neuer Mitarbeiter:</label></br>
             <input
               type="text"
               class="form-control"
-              id="ma_firstname"
-              name="ma_firstname"
+              id="m_vorname"
+              name="m_vorname"
               placeholder="Vorname"
             />
           </div>
@@ -18,8 +19,8 @@
             <input
               type="text"
               class="form-control"
-              id="ma_lastname"
-              name="ma_lastname"
+              id="m_nachname"
+              name="m_nachname"
               placeholder="Nachname"
             />
           </div>
@@ -27,44 +28,85 @@
             <input
               type="text"
               class="form-control"
-              id="ma_birthday"
-              name="ma_birthday"
-              placeholder="Geburtstag (Bsp.: 01011990)"
+              id="m_geburtstag"
+              name="m_geburtstag"
+              placeholder="Geburtstag"
             />
-          </div></br>
+          </div>
+         <div class="form-group">
+            <input
+              type="email"
+              class="form-control"
+              id="m_email"
+              name="m_email"
+              placeholder="E-Mail Adresse"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control"
+              id="m_passwort"
+              name="m_passwort"
+              placeholder="Passwort"
+            />
+          </div>
+          <br />
           <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
-          <br />
-          <br />
         </form>
-    <hr />
-    <u1 class="list-group list-group-flush" id="mitarbeiter-list">
-        {% for ma in mitarbeiter %}
-            <li class="list-group-item">
-                <li>
-                    <span class="field-name">Mitarbeiter:</span>
-                    <span class="field-value">{{ ma.firstname }} {{ ma.lastname }}</span>
+        <hr />
+        <h3 class="py-5">Mitarbeiter:</h3>
+        <u1 class="list-group list-group-flush" id="mitarbeiter-liste">
+            {% for m in mitarbeiter %}
+                <li class="list-group-item">
+                    <li>
+                        <span class="field-name">Name:</span>
+                        <span class="field-value">{{ m.vorname }} {{ m.nachname }}</span>
+                    </li>
+                    <li>
+                        <span class="field-name">E-Mail Adresse:</span>
+                        <span class="field-value">{{ m.email }}</span>
+                    </li>
+                    <li>
+                        <span class="field-name">Geburtstag:</span>
+                        <span class="field-value">{{ m.geburtstag }}</span>
+                    </li>
+                    <li>
+                        <p>
+                            <a href="/bearbeitenMitarbeiter/{{ m.id }}"
+                               class="btn btn-primary btn-lg-active"
+                               role="button" aria-pressed="true">BEARBEITEN |
+                            </a>
+                            <a href="/löschenMitarbeiter/{{ m.id }}"
+                               class="btn btn-primary btn-lg-active"
+                               role="button" aria-pressed="true">LÖSCHEN
+                            </a>
+                        </p>
+                    </li>
                 </li>
-                <li>
-                    <span class="field-name">Geburtstag:</span>
-                    <span class="field-value">{{ ma.birthday }}</span>
-                    <p>
-                        <a href="/edit_mitarbeiter/{{ ma.id }}"
-                           class="btn btn-primary btn-lg-active"
-                           role="button" aria-pressed="true">BEARBEITEN |
-                        </a>
-                        <a href="/delete_mitarbeiter/{{ ma.id }}"
-                           class="btn btn-primary btn-lg-active"
-                           role="button" aria-pressed="true">LÖSCHEN
-                        </a>
-                    </p>
-                    </form>
-                    <hr />
-                    <br />
+            {% endfor %}
+            </u1>
+        {% endif %}
+       {% if current_user.admin == False %}
+        <u1 class="list-group list-group-flush" id="mitarbeiter-liste">
+            {% for m in mitarbeiter %}
+                <li class="list-group-item">
+                    <li>
+                        <span class="field-name">Name:</span>
+                        <span class="field-value">{{ m.vorname }} {{ m.nachname }}</span>
+                    </li>
+                    <li>
+                        <span class="field-name">E-Mail Adresse:</span>
+                        <span class="field-value">{{ m.email }}</span>
+                    </li>
+                    <li>
+                        <span class="field-name">Geburtstag:</span>
+                        <span class="field-value">{{ m.geburtstag }}</span>
+                    </li>
+                    <li>
+                    </li>
                 </li>
-            </form>
-
-            </li>
-        {% endfor %}
-    </u1>
-<br />
+            {% endfor %}
+            </u1>
+    {% endif %}
 {% endblock %}

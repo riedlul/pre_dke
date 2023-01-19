@@ -1,86 +1,64 @@
 {% extends "base.html" %}
-{% block title %}strecken{% endblock %}
+{% block title %}Strecken{% endblock %}
 {% block content %}
 <dif>
-    <h1 class="py-5">Routes</h1>
+    <h1 class="py-5">Strecken</h1>
     {% if current_user.admin == True %}
     <form method="POST">
-      <h3 align="center">Add a new Route</h3>
-      <br />
       <div class="form-group">
-        <label for="s_name">Enter a name for your new route:</label>
         <input
           type="text"
           class="form-control"
-          id="s_name"
-          name="s_name"
+          id="rou_name"
+          name="rou_name"
           placeholder="Name der Strecke"
         />
       </div>
-      <div class="form-group">
-        <label for="s_start">Choose a trainstation where your new route will start:</label>
-          <select id="s_start" name="rou_start" class="form-control">
-              {% for ts in all_bahnhöfe %}
-                <option value="{{ ts.id }}">{{ ts.name }} - {{ ts.address }}</option>
-              {% endfor %}
-          </select>
-      </div>
       <div>
-          <label>Abschnitte hinzufügen:</label>
+          <br>
+          <label>Abschnitte auswählen:</label>
           <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    {% for sec in all_sections %}
+                    {% for a in abschnitte %}
                         <label class="switch ">
-                            <input type="checkbox" name="s_sections" class="danger"
-                                   value="{{ abschnitt.id }}">{{ abschnitt.start.name }} - {{ abschnitt.end.name }}
-                            <span class="slider round"></span>
+                            <input type="checkbox" name="rou_sections" class="danger"
+                                   value="{{ a.id }}">Abschnitt von {{ a.start.name }} nach {{ a.end.name }}
                         </label>
                     <br>
                     {% endfor %}
                 </li>
           </ul>
       </div>
+      <br />
+      <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
     </form>
     {% endif %}
     <hr />
     <u1 class="list-group list-group-flush" id="route-list">
         {% for s in strecken %}
             <li id="{{ s.id }}" class="entry list-group-item">
-                {% if current_user.admin == True %}
-                    <li>
-                        <span class="field-name":>Strecke_id:</span>
-                        <span class="field-value">{{ s.id }}</span>
-                    </li>
-                {% endif %}
                 <li>
-                    <span class="field-name":>Streckenname</span>
-                    <span class="field-value">{{ sname }}</span>
+                    <span class="field-name":>Strecke:</span>
+                    <span class="field-value">{{ s.name }}</span>
                 </li>
                 <li>
-                    <span class="field-name":>Srecke_start:</span>
-                    <span class="field-value">{{ strecke.start.name }}</span>
-                </li>
-                <li>
-                    <span class="field-name":>Strecke_end:</span>
-                    <span class="field-value">{{ strecke.end.name }}</span>
-                </li>
-                <li>
-                    <span class="field-name":>Strecke_abschnitte:</span>
+                    <span class="field-name":>Streckenabschnitte:</span>
                     <br>
-                    {% for s in strecke.route_sections %}
-                    <span class="field-value">[{{ s.start.name }} - {{ s.end.name }}]<br></span>
+                    {% for s in s.strecken_abschnitt %}
+                    <span class="field-value">{{ s.start.name }} - {{ s.end.name }}<br></span>
                     {% endfor %}
                 </li>
                 {% if current_user.admin == True %}
                     <p>
-                        <a href="/edit_routes/{{ rou.id }}"
+                        <a href="/bearbeitenStrecke/{{ s.id }}"
                            class="btn btn-primary btn-lg-active"
-                           role="button" aria-pressed="true">Edit
+                           role="button" aria-pressed="true">BEARBEITEN |
                         </a>
-                        <button type="button" class="btn btn-danger"
-                                onClick="deleteRoute({{ rou.id }})">Delete
-                        </button>
-                        </p>
+                        <a href="/löschenStrecke/{{ s.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">LÖSCHEN
+                        </a>
+                    </p>
                 {% endif %}
             </li>
         {% endfor %}

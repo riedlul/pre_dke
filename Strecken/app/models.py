@@ -1,186 +1,172 @@
-from datetime import datetime
-from sqlalchemy import ForeignKey
+from flask_login import UserMixin
+from marshmallow_sqlalchemy.fields import Nested
 from sqlalchemy.sql import func
 
-from flask_login import UserMixin
+from . import db, marsh
 
-from app import db, marsh
 
-class User(db.Model):
+class Mitarbeiter(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
-
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return '<Post {}>'.format(self.body)
-
-
-class Benutzer(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    passwort = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    first_name = db.Column(db.String(150))
-    last_name = db.Column(db.String(150))
+    vorname = db.Column(db.String(150))
+    nachname = db.Column(db.String(150))
+    geburtstag = db.Column(db.String(70))
     admin = db.Column(db.Boolean, default=False)
-
-
-class Bahnhof(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), nullable=False)
-    address = db.Column(db.String(60), nullable=False)
-
-    def __repr__(self):
-        return f"Bahnhof(name {self.name}, address {self.address})"
-
-
-# Schemas für API
-class BahnhofSchema(marsh.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Benutzer
-        ordered = True
-        fields = (
-            "id",
-            "email",
-        )
-
-
-user_schema = BahnhofSchema()
-users_schema = BahnhofSchema(many=True)
-
-
-class TrainstationSchema(marsh.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Bahnhof
-        ordered = True
-        fields = (
-            "id",
-            "name",
-            "address"
-        )
-
-
-bahnhofSchema = TrainstationSchema()
-bahnhöfeSchema = TrainstationSchema(many=True)
-
-
-class Mitarbeiter(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(60), nullable=False)
-    lastname = db.Column(db.String(60), nullable=False)
-    birthday = db.Column(db.Integer, nullable=False)
-
-    def __repr__(self):
-        return f"Mitarbeiter(firstname {self.firstname}, lastname {self.lastname}, birthday {self.birthday})"
 
 
 class MitarbeiterSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
-        model = Benutzer
+        model = Mitarbeiter
         ordered = True
         fields = (
             "id",
-            "firstname",
-            "lastname",
-            "birthday",
+            "email",
+            "vorname",
+            "nachname"
         )
 
 
-mitarbeiterSchema = MitarbeiterSchema()
-mitarbeiterSchema = MitarbeiterSchema(many=True)
+mitarbeiter_schema = MitarbeiterSchema()
+mitarbeiterinnen_schema = MitarbeiterSchema(many=True)
 
-class WarningModel(db.Model):
+
+class BahnhofModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    warnings = db.Column(db.String(1000), nullable=False)
-    warning_section = db.Column(db.String(100), db.ForeignKey('AbschnittModel.id'))
+    name = db.Column(db.String(100), nullable=False)
+    adresse = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f"Bahnhof(name {self.name}, adresse {self.adresse})"
+
+
+class BahnhofSchema(marsh.SQLAlchemyAutoSchema):
+    class Meta:
+        model = BahnhofModel
+        ordered = True
+        fields = (
+            "id",
+            "name",
+            "adresse"
+        )
+
+
+bahnhof_schema = BahnhofSchema()
+bahnhofe_schema = BahnhofSchema(many=True)
+
+class AbschnittModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start = db.relationship('BahnhofModel', foreign_keys='AbschnittModel.start_id')
+    start_id = db.Column(db.Integer, db.ForeignKey('bahnhof_model.id'))
+    end = db.relationship('BahnhofModel', foreign_keys='AbschnittModel.end_id')
+    end_id = db.Column(db.Integer, db.ForeignKey('bahnhof_model.id'))
+    spurweite = db.Column(db.String(100), nullable=False)
+    entgelt = db.Column(db.Integer, nullable=False)
+    lang = db.Column(db.Integer, nullable=False)
+    maxgesch = db.Column(db.Integer, nullable=False)
+    abschnitt_warnung = db.relationship('WarnungModel',
+                                       lazy='joined',
+                                       backref=db.backref('abschnitt', lazy='joined'))
+
+    def __repr__(self):
+        return f"Abschnitt(start {self.start}, end {self.end}, spurweite {self.spurweite}, " \
+               f"entgelt {self.entgelt}, lang {self.lang}, maxgesch {self.maxgesch}, abschnitt_warnung {self.abschnitt_warnung}"
+
+
+
+abschnitt = db.Table('abschnitt',
+                    db.Column('abschnitt_model_id', db.Integer, db.ForeignKey('abschnitt_model.id'), primary_key=True),
+                    db.Column('strecken_model_id', db.Integer, db.ForeignKey('strecken_model.id'), primary_key=True)
+                    )
+
+
+
+class StreckenModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    strecken_abschnitt = db.relationship('AbschnittModel',
+                                     secondary=abschnitt,
+                                     lazy='dynamic',
+                                     backref=db.backref('strecken', lazy=True))
 
     def __repr__(self):
         return {"id": self.id,
-                "warnings": self.warnings,
-                "warning_section": self.warning_section,
+                "name": self.name,
+                "strecken_abschnitt": self.strecken_abschnitt
                 }
-class AbschnittModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    startbahnhof = db.Column(db.String(100), db.ForeignKey('Bahnhof.id'))
-    endbahnhof = db.Column(db.String(100), db.ForeignKey('Bahnhof.id'))
 
-    länge = db.Column(db.String(100), nullable=False)
-    spurweite = db.Column(db.Integer, nullable=False)
-    entgelt = db.Column(db.Integer, nullable=False)
-    maxGeschwindigkeit = db.Column(db.Integer, nullable=False)
-    section_warnings = db.Column(db.String(100), db.ForeignKey('WarningModel.id'))
+
+
+class WarnungModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    warnung = db.Column(db.String(1000), nullable=False)
+    warnung_abschnitt = db.relationship('AbschnittModel', foreign_keys='WarnungModel.abschnitt_id')
+    abschnitt_id = db.Column(db.Integer, db.ForeignKey('abschnitt_model.id'))
 
     def __repr__(self):
-        return f"Abschnitt(startbahnhof {self.startbahnhof}, endbahnhof {self.endbahnhof}, länge {self.track}, " \
-               f"entgelt {self.entgelt}, maxGeschwindigkeit {self.maxGeschwindigkeit}, section_warnings {self.section_warnings}"
+        return {"id": self.id,
+                "warnung": self.warnung,
+                "warnung_abschnitt": self.warnung_abschnitt,
+                "abschnitt_id": self.abschnitt_id
+                }
+
+
+
+class WarnungSchema(marsh.SQLAlchemyAutoSchema):
+    class Meta:
+        model = WarnungModel
+        ordered = True
+        fields = (
+            "id",
+            "warnung"
+        )
+
+
+warnung_schema = WarnungSchema()
+warnungen_schema = WarnungSchema(many=True)
 
 
 class AbschnittSchema(marsh.SQLAlchemyAutoSchema):
+    start = Nested(BahnhofSchema)
+    end = Nested(BahnhofSchema)
+    abschnitt_warnung = Nested(WarnungSchema, many=True)
+
     class Meta:
         model = AbschnittModel
-
-    ordered = True
-    fields = (
-        "id",
-        "name",
-        "startbahnhof",
-        "start_id",
-        "endbahnhof",
-        "end_id",
-        "entgelt",
-        "spurweite",
-        "maxGeschwindigkeit",
-        "länge",
-        "section_warnings"
-    )
+        ordered = True
+        fields = (
+            "id",
+            "start",
+            "start_id",
+            "end",
+            "end_id",
+            "spurweite",
+            "entgelt",
+            "lang",
+            "maxgesch",
+            "abschnitt_warnung"
+        )
 
 
 abschnitt_schema = AbschnittSchema()
-abschnitt_schema = AbschnittSchema(many=True)
+abschnitte_schema = AbschnittSchema(many=True)
 
 
+class StreckenSchema(marsh.SQLAlchemyAutoSchema):
+    start = Nested(BahnhofSchema)
+    end = Nested(BahnhofSchema)
+    strecken_abschnitt = Nested(AbschnittSchema, many=True)
 
-class WarningSchema(marsh.SQLAlchemyAutoSchema):
     class Meta:
-        model = WarningModel
+        model = StreckenModel
         ordered = True
         fields = (
             "id",
-            "warnings"
+            "name",
+            "strecken_abschnitt"
         )
 
 
-warning_schema = WarningSchema()
-warnings_schema = WarningSchema(many=True)
+strecke_schema = StreckenSchema()
+strecken_schema = StreckenSchema(many=True)
 
-
-
-
-
-
-class WarningSchemaSection(marsh.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = WarningModel
-        ordered = True
-        fields = (
-            "id",
-            "warnings",
-            "section_id",
-            "section"
-        )
-
-
-warning_section_schema = WarningSchemaSection()
-warnings_section_schema = WarningSchemaSection(many=True)

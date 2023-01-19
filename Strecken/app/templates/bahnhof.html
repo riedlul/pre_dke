@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-{% block title %}bahnhof{% endblock %}
+{% block title %}Bahnhöfe{% endblock %}
 {% block content %}
     <h1 class="py-5">Bahnhöfe</h1>
-        <form method="POST">
+    {% if current_user.admin == True %}
+       <form method="POST">
           <br />
           <div class="form-group">
-            <label for="ts_name">neuer Bahnhof:</label></br>
+            <label for="b_name">neuer Bahnhof:</label></br>
             <input
               type="text"
               class="form-control"
-              id="ts_name"
-              name="ts_name"
+              id="b_name"
+              name="b_name"
               placeholder="Name"
             />
           </div>
@@ -18,8 +19,8 @@
             <input
               type="text"
               class="form-control"
-              id="ts_address"
-              name="ts_address"
+              id="b_address"
+              name="b_address"
               placeholder="Adresse"
             />
           </div></br>
@@ -28,22 +29,22 @@
           <br />
         </form>
     <hr />
-    <u1 class="list-group list-group-flush" id="trainstation-list">
-        {% for ts in bahnhöfe %}
+    <u1 class="list-group list-group-flush" id="bahnhöfe-liste">
+        {% for b in bahnhöfe %}
             <li class="list-group-item">
                 <li>
                     <span class="field-name">Bahnhof:</span>
-                    <span class="field-value">{{ ts.name }}</span>
+                    <span class="field-value">{{ b.name }}</span>
                 </li>
                 <li>
                     <span class="field-name">Adresse:</span>
-                    <span class="field-value">{{ ts.address }}</span>
+                    <span class="field-value">{{ b.adresse }}</span>
                     <p>
-                        <a href="/edit_Bahnhöfe/{{ ts.id }}"
+                        <a href="/bearbeitenBahnhof/{{ b.id }}"
                            class="btn btn-primary btn-lg-active"
                            role="button" aria-pressed="true">BEARBEITEN |
                         </a>
-                        <a href="/delete_b/{{ ts.id }}"
+                        <a href="/löschenBahnhof/{{ b.id }}"
                            class="btn btn-primary btn-lg-active"
                            role="button" aria-pressed="true">LÖSCHEN
                         </a>
@@ -57,5 +58,27 @@
             </li>
         {% endfor %}
     </u1>
+    {% endif %}
+    {% if current_user.admin == False %}
+    <u1 class="list-group list-group-flush" id="bahnhöfe-liste">
+        {% for b in bahnhöfe %}
+            <li class="list-group-item">
+                <li>
+                    <span class="field-name">Bahnhof:</span>
+                    <span class="field-value">{{ b.name }}</span>
+                </li>
+                <li>
+                    <span class="field-name">Adresse:</span>
+                    <span class="field-value">{{ b.address }}</span>
+                    </form>
+                    <hr />
+                    <br />
+                </li>
+            </form>
+
+            </li>
+        {% endfor %}
+    </u1>
+    {% endif %}
 <br />
 {% endblock %}

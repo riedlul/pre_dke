@@ -1,49 +1,40 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, IntegerField, SubmitField, PasswordField, DateField, BooleanField, EmailField, widgets
+from wtforms.validators import DataRequired, Length, Email, InputRequired, EqualTo, email_validator
+from wtforms.widgets import PasswordInput
 
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+class mitarbeiterFormBearbeiten(FlaskForm):
+    vorname = StringField('Vorname', validators=[DataRequired()])
+    nachname = StringField('Nachname', validators=[Length(min=3, max=150)])
+    email = EmailField('E-Mail', validators=email_validator)
+    passwort = PasswordField('Passwort', widget=PasswordInput(hide_value=False))
+    geburtstag = StringField('Geburtstag')
+    admin = BooleanField('admin')
+    submit = SubmitField('ok')
 
 class bahnhofFormBearbeiten(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    address = StringField('Adresse', validators=[Length(min=1, max=150)])
+    adresse = StringField('Adresse', validators=[Length(min=1, max=150)])
     submit = SubmitField('ok')
 
 class bahnhofFormLöschen(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    address = StringField('Adresse', validators=[Length(min=1, max=150)])
+    adresse = StringField('Adresse', validators=[Length(min=1, max=150)])
     submit = SubmitField('löschen')
 
-class abschnittFormBearbeiten(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    spurweite = StringField('Spurweite', validators=[Length(min=1, max=150)])
-    maxGeschwindigkeit = StringField('maximale Geschwindigkeit', validators=[Length(min=1, max=150)])
-    entgelt = StringField('Entgelt', validators=[Length(min=1, max=150)])
-    länge = StringField('Länge', validators=[Length(min=1, max=150)])
-    startbahnhof =StringField('Startbahnhof', validators=[])
+class abschnittFormbearbeiten(FlaskForm):
+    spurweite = StringField('Spurweite in m', validators=[DataRequired()])
+    entgelt = StringField('Nutzungsentgelt in EUR', validators=[Length(min=1, max=150)])
+    lang = StringField('Länge in km', validators=[Length(min=1, max=150)])
+    maxgesch = StringField('Naximalgeschwindigkeit in km/h', validators=[Length(min=1, max=150)])
     submit = SubmitField('ok')
 
-class abschnittFormLöschen(FlaskForm):
+class streckenFormbearbeiten(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    spurweite = StringField('Spurweite', validators=[Length(min=1, max=150)])
-    maxGeschwindigkeit = StringField('maximale Geschwindigkeit', validators=[Length(min=1, max=150)])
-    entgelt = StringField('Entgelt', validators=[Length(min=1, max=150)])
-    länge = StringField('Länge', validators=[Length(min=1, max=150)])
-    submit = SubmitField('löschen')
-
-class mitarbeiterFormBearbeiten(FlaskForm):
-    lastname = StringField('lastname', validators=[DataRequired()])
-    firstname = StringField('firstname', validators=[DataRequired()])
-    birthday = StringField('birthday', validators=[Length(min=1, max=150)])
     submit = SubmitField('ok')
 
-class mitarbeiterFormLöschen(FlaskForm):
-    firstname = StringField('firstname', validators=[DataRequired()])
-    lastname = StringField('lastname', validators=[DataRequired()])
-    birthday = StringField('birthday', validators=[Length(min=1, max=150)])
-    submit = SubmitField('löschen')
+
+class warnungFormbearbeiten(FlaskForm):
+    warnung = StringField('Warnung', validators=[DataRequired()])
+    submit = SubmitField('ok')
+
