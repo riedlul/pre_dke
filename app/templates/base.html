@@ -10,14 +10,23 @@
         <div>
 			TicketIS:
 				<a href="{{ url_for('index') }}">Home</a>
-				<a href="{{ url_for('bahnhofauswahl') }}">Fahrplan</a>
+				
 			{% if current_user.is_anonymous %}
+                <a href="{{ url_for('bahnhofauswahl') }}">Fahrplan</a>
 				<a href="{{ url_for('login') }}">Login</a>
 			{% else %}
-				<a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-				<a href="{{ url_for('logout') }}">Logout</a>
-				<a href="{{ url_for('ticketsoverview') }}">TicketÜbersicht</a>
-			{% endif %}
+            {% if not current_user.admin %}
+                    <a href="{{ url_for('bahnhofauswahl') }}">Fahrplan</a>
+                    <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+                    <a href="{{ url_for('ticketsoverview') }}">TicketÜbersicht</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+            {% endif %}
+            {% if current_user.admin %}
+                <a href="{{ url_for('aktionen') }}">Aktionen</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+            
 		</div>
         <hr>
         {% with messages = get_flashed_messages() %}

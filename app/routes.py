@@ -35,9 +35,22 @@ def buyticket(von, nach, preis, fdID):
 
 @app.route("/ticketsoverview", methods=['GET', 'POST'])
 def overview():
-    alltickets2 = db.session.query(Ticket,Fahrtdurchführung).join(Fahrtdurchführung, Ticket.fahrtdurchführung == Fahrtdurchführung.id).filter(Ticket.userid == current_user.id).all()
-    alltickets = db.session.execute('SELECT ticket.id AS ticket_id, ticket.userid AS ticket_userid, ticket."startStation" AS "ticket_startStation", ticket."endStation" AS "ticket_endStation", ticket."fahrtdurchführung" AS "ticket_fahrtdurchführung", ticket.preis AS ticket_preis, ticket.status AS ticket_status, "fahrtdurchführung".id AS "fahrtdurchführung_id", "fahrtdurchführung"."startDatum" AS "fahrtdurchführung_startDatum", "fahrtdurchführung"."endDatum" AS "fahrtdurchführung_endDatum", "fahrtdurchführung".fahrtstrecke AS "fahrtdurchführung_fahrtstrecke", "fahrtdurchführung".richtung AS "fahrtdurchführung_richtung" FROM ticket JOIN "fahrtdurchführung" ON ticket."fahrtdurchführung" = "fahrtdurchführung".id WHERE ticket.userid = 1')
+    '''alltickets2=db.session.query(Ticket)
+    for t in alltickets2:
+        if(str(current_user)==t.userid):
+            dateTicket=t.startDatum
+            print(str(dateTicket))
+            print(str(now))
+            if(str(dateTicket)<str(now)):
+                try:
+                    t.status='vergangen'
+                    db.session.commit()
+                except:
+                    print("bing bap")'''
+    alltickets = db.session.execute('SELECT ticket.sitzplatzreservierung AS ticket_sitzplatzreservierung, ticket.id AS ticket_id, ticket.userid AS ticket_userid, ticket."startStation" AS "ticket_startStation", ticket."endStation" AS "ticket_endStation", ticket."fahrtdurchführung" AS "ticket_fahrtdurchführung", ticket.preis AS ticket_preis, ticket.status AS ticket_status, "fahrtdurchführung".id AS "fahrtdurchführung_id", "fahrtdurchführung"."startDatum" AS "fahrtdurchführung_startDatum", "fahrtdurchführung"."endDatum" AS "fahrtdurchführung_endDatum", "fahrtdurchführung".fahrtstrecke AS "fahrtdurchführung_fahrtstrecke", "fahrtdurchführung".richtung AS "fahrtdurchführung_richtung" FROM ticket JOIN "fahrtdurchführung" ON ticket."fahrtdurchführung" = "fahrtdurchführung".id WHERE ticket.userid = ' + str(current_user.id))
     now = datetime.utcnow()
+    
+               
     form = BuyTicketForm()
     if request.method == 'GET':
         return render_template('ticketsoverview.html', user=user, now=now, form=form,tickets=alltickets)
@@ -85,7 +98,6 @@ def fahrplan():
         flash('Bitte zwei verschiedene Bahnhöfe auswählen')
         return render_template('bahnhofauswahl.html',form=form2,bhfe=bahnhoefe)
     searchDateStr = request.form.get('start_date')
-    print(searchDateStr)
     searchDate = datetime.strptime(searchDateStr, '%Y-%m-%d').date()
     form=BuyTicketForm()
     startbhf=db.session.query(Abschnitt).filter(Abschnitt.startBahnhof==start)
@@ -97,7 +109,7 @@ def fahrplan():
         startAnzahl=startAnzahl+1
     for i in endbhf:
         endAnzahl=endAnzahl+1
-
+   
     """wenn nur ein startbhf && mehrere end ODER umgekehrt"""
     if ((startAnzahl==1 and endAnzahl>1) or (startAnzahl>1 and endAnzahl==1)):
         for instance2 in endbhf:
@@ -125,6 +137,23 @@ def fahrplan():
                             durchfuehrungen=db.session.query(Fahrtdurchführung).filter(instance.fahrtstrecke==Fahrtdurchführung.fahrtstrecke, instance.richtung==Fahrtdurchführung.richtung)
                             startFahrtstrecke=startInst.fahrtstrecke
                             endFahrtstrecke=instance2.fahrtstrecke
+    '''generelle aktionen apply'''
+    allGenDiscounts=db.session.query(GenerelleAktion)
+    for gd in allGenDiscounts:
+        genAktstartDatum=datetime.strptime(str(gd.startDatum.strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+        genAktendDatum=datetime.strptime(str(gd.endDatum.strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+        maxProzent=0
+        if(genAktstartDatum<=searchDate) and (genAktendDatum>=searchDate)and (gd.prozent>maxProzent):
+            maxProzent=gd.prozent
+    print(str(maxProzent))
+    '''fahrtstreckn aktionen apply'''
+    allFSDiscounts=db.session.query(FahrtstreckeAktion)
+    for fd in allFSDiscounts:
+        fsAktstartDatum=datetime.strptime(str(fd.startDatum.strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+        fsAktendDatum=datetime.strptime(str(fd.endDatum.strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+        if(fsAktstartDatum<=searchDate) and (fsAktendDatum>=searchDate) and (fd.prozent>maxProzent) and (fd.fahrtstrecke==startFahrtstrecke):
+            maxProzent=fd.prozent
+    print(str(maxProzent))
     if(check==1):
         if(startFahrtstrecke==endFahrtstrecke):
             df=[]
@@ -136,6 +165,7 @@ def fahrplan():
             preis=10+(endReihung-startReihung)*10
             preis=abs(preis)
             if request.method == 'POST':
+                if maxProzent>0: preis=preis*(maxProzent/100)
                 return render_template('fahrplan.html',startInst=startInst, endInst=endInst, preis=preis, durchfuehrungen=df,form=form)
             elif request.method == 'GET':
                 return render_template('fahrplan.html')
@@ -214,6 +244,95 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/reserveSeat/<ticketID>', methods=['GET', 'POST'])
+@login_required
+def reserveSeat(ticketID):
+    try:
+        ticket = db.session.query(Ticket).filter(Ticket.id==ticketID)
+        for t in ticket:
+            ticketFD=t.fahrtdurchführung
+        fahrtD=db.session.query(Fahrtdurchführung).filter(Fahrtdurchführung.id==ticketFD)
+        for fd in fahrtD:
+            for t in ticket:
+                print(int(fd.id))
+                print(int(t.fahrtdurchführung))
+                if (int(fd.id)==int(t.fahrtdurchführung)):
+                    freeSeats=fd.sitzplaetzeFrei
+                    print("freie sitzplätze")
+                    print(freeSeats)
+                    if(freeSeats>0):
+                        t.sitzplatzreservierung=1
+                        fd.sitzplaetzeFrei=freeSeats-1
+                        db.session.commit()
+                        alltickets = db.session.execute('SELECT ticket.sitzplatzreservierung AS ticket_sitzplatzreservierung, ticket.id AS ticket_id, ticket.userid AS ticket_userid, ticket."startStation" AS "ticket_startStation", ticket."endStation" AS "ticket_endStation", ticket."fahrtdurchführung" AS "ticket_fahrtdurchführung", ticket.preis AS ticket_preis, ticket.status AS ticket_status, "fahrtdurchführung".id AS "fahrtdurchführung_id", "fahrtdurchführung"."startDatum" AS "fahrtdurchführung_startDatum", "fahrtdurchführung"."endDatum" AS "fahrtdurchführung_endDatum", "fahrtdurchführung".fahrtstrecke AS "fahrtdurchführung_fahrtstrecke", "fahrtdurchführung".richtung AS "fahrtdurchführung_richtung" FROM ticket JOIN "fahrtdurchführung" ON ticket."fahrtdurchführung" = "fahrtdurchführung".id WHERE ticket.userid = ' + str(current_user.id))
+                        form = BuyTicketForm()
+                        flash("Sitzplatz reserviert")
+                        return render_template('ticketsoverview.html', user=user, form=form,tickets=alltickets)
+                    else: flash("Keine freien Sitzplätze vorhanden")
+    except: 
+        flash("Sitzplatz konnte nicht reserviert werden")
+        return render_template('ticketsoverview.html')
+
+@app.route('/aktionen', methods=['GET', 'POST'])
+@login_required
+def aktionen():
+    gAktionen=db.session.query(GenerelleAktion)
+    fAktionen=db.session.query(FahrtstreckeAktion)
+    return render_template('aktionen.html', gAktionen=gAktionen, fAktionen=fAktionen)
+
+@app.route('/newAktionGen/', methods=['GET', 'POST'])
+def newAktionGen():
+    genForm=NewGenAktionForm()
+    if request.method == 'GET':
+        return render_template('newAktionGen.html',form=genForm)
+    elif request.method == 'POST':
+        if genForm.validate_on_submit():
+            genAktion = GenerelleAktion(prozent=genForm.prozent.data, startDatum=genForm.start_date.data, endDatum=genForm.end_date.data)
+            try:
+                db.session.add(genAktion)
+                db.session.commit()
+                return redirect(url_for('aktionen'))
+            except:
+                return redirect(url_for('aktionen'))
+@app.route('/newAktionFS/', methods=['GET', 'POST'])
+def newAktionFS():
+    fsForm=NewFSAktionForm()
+    if request.method == 'GET':
+        return render_template('newAktionFS.html',form=fsForm)
+    elif request.method == 'POST':
+        if fsForm.validate_on_submit():
+            fsAktion = FahrtstreckeAktion(fahrtstrecke=fsForm.fahrtstrecke.data,prozent=fsForm.prozent.data, startDatum=fsForm.start_date.data, endDatum=fsForm.end_date.data)
+            try:
+                db.session.add(fsAktion)
+                db.session.commit()
+                return redirect(url_for('aktionen'))
+            except:
+                return redirect(url_for('aktionen'))
+
+@app.route('/deleteAktionGenerell/<aktion_id>/', methods=['GET', 'POST'])
+def deleteAktion(aktion_id):
+    aktion = GenerelleAktion.query.get(aktion_id)
+    try:
+        db.session.delete(aktion)
+        db.session.commit()
+        flash("Aktion wurde erfolgreich gelöscht")
+        return redirect(url_for('aktionen'))
+    except:
+        flash("Aktion konnte nicht gelöscht werden")
+        return redirect(url_for('aktionen'))
+
+@app.route('/deleteAktionFS/<aktion_id>/', methods=['GET', 'POST'])
+def deleteAktionFS(aktion_id):
+    aktion = FahrtstreckeAktion.query.get(aktion_id)
+    try:
+        db.session.delete(aktion)
+        db.session.commit()
+        flash("Aktion wurde erfolgreich gelöscht")
+        return redirect(url_for('aktionen'))
+    except:
+        flash("Aktion konnte nicht gelöscht werden")
+        return redirect(url_for('aktionen'))
 
 
 @app.route('/user/<username>')

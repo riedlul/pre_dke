@@ -10,6 +10,8 @@
 				<td>Status</td>
 				<td>Abfahrt</td>
 				<td>Ankunft</td>
+				<td>Sitzplatz J/N</td>
+				<td>Sitzplatz reservieren</td>
 				<td>Stornieren</td>
 			</tr>
 			{% for t in tickets %}
@@ -20,7 +22,11 @@
 				<td>{{t.ticket_status}}</td>
 				<td>{{t.fahrtdurchführung_startDatum}}</td>
 				<td>{{t.fahrtdurchführung_endDatum}}</td>
-				<td><a href="{{'cancel_ticket'}}/{{t.id}}"> stornieren</a></td>
+				<td>{{t.ticket_sitzplatzreservierung}}</td>
+				<td><a href="{{'reserveSeat'}}/{{t.ticket_id}}"> Reservieren</a></td>
+				{% if t.ticket_status!='storniert' %}
+				<td><a href="{{'cancel_ticket'}}/{{t.ticket_id}}"> stornieren</a></td>
+				{% endif %}
 			</tr>
 			{% endfor %}
 		</table>

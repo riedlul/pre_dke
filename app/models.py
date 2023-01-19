@@ -3,6 +3,21 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+class FahrtstreckeAktion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    prozent = db.Column(db.Float)
+    fahrtstrecke = db.Column(db.Integer, db.ForeignKey('fahrtstrecke.id'))
+    startDatum = db.Column(db.DateTime, nullable=False)
+    endDatum = db.Column(db.DateTime, nullable=False)
+
+class GenerelleAktion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    prozent = db.Column(db.Float)
+    startDatum = db.Column(db.DateTime, nullable=False)
+    endDatum = db.Column(db.DateTime, nullable=False)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -11,6 +26,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     vorname = db.Column(db.String(128))
     nachname = db.Column(db.String(128))
+    admin = db.Column(db.Integer, default=0)
     def __repr__(self):
         return '<User {}>'.format(self.username)
         
@@ -21,21 +37,11 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 class Fahrtstrecke(db.Model):
-    """ÄNDERN"""
     id = db.Column(db.Integer, primary_key=True)
     startPunkt = db.Column(db.String, index=True, nullable=False)
     endPunkt = db.Column(db.String, index=True, nullable=False) 
-class Fahrtstrecke_abschnitte(db.Model):
-    """DB-Modell für Abschnitte, die zu Fahrtstrecken gehören.
-    Dieses Assoziationsmodell Fahrtstrecke_Abschnitt wird verwendet, um die Verbindung zwischen den Abschnitten und den
-        Routen zu realisieren (many to many Beziehung).
-    Zusätzlich zu den IDs von beiden Modellen Fahrtstrecke und Abschnitt enthält es ein
-        zusätzliches Feld abschnitt_number, das die Zugehörigkeit eines Abschnitts zu
-        einem Fahrtabschnitt unter anderen Abschnitten definiert.
-    """
+    #children = relationship("Fahrtdurchführung")
 
-    fahrtstrecke = db.Column(db.Integer, db.ForeignKey("fahrtstrecke.id"), primary_key=True)
-    abschnitt = db.Column(db.Integer, db.ForeignKey("abschnitt.id"), primary_key=True)
 
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,23 +51,22 @@ class Ticket(db.Model):
     fahrtdurchführung = db.Column(db.Integer, db.ForeignKey('fahrtdurchführung.id'))
     preis = db.Column(db.Float)
     status= db.Column(db.String)
+    sitzplatzreservierung=db.Column(db.Integer, default=0)
     def __repr__(self):
         return '<Ticket {}>'.format(self.id)
 
 
 class Fahrtdurchführung(db.Model):
-    """ÄNDERN"""
     id = db.Column(db.Integer, primary_key=True)
     startDatum = db.Column(db.DateTime, index=True, nullable=False)
     endDatum = db.Column(db.DateTime, index=True, nullable=False)
     fahrtstrecke = db.Column(db.Integer, db.ForeignKey('fahrtstrecke.id'), index=True)
     ticket = db.relationship('Ticket', backref='fahrtd', lazy='dynamic')
-    richtung =db.Column(db.Integer) 
+    richtung =db.Column(db.Integer)
+    zugname=db.Column(db.String)
+    sitzplaetzeFrei=db.Column(db.Integer)
+    #parent_id = db.Column(db.Integer, db.ForeignKey('Fahrtsrecke.id'))
 class Abschnitt(db.Model):
-    """DB-Modell für Abschnitte.
-    Abschnitte haben einen Start- und einen Endbahnhof, ein Nutzungsentgelt, eine Distanz und eine Bezeichnung.
-    Jedes Feld muss einen Wert haben.
-    """
 
     id = db.Column(db.Integer, primary_key=True)
     startBahnhof = db.Column(db.String(20), nullable=False)

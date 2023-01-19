@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Aktionenübersicht<h3>
+  <h3> Generelle Aktionen</h3>
+    <table>
+      <tr class="row">
+        <td>ID</td>
+        <td>Prozent</td>
+        <td>Startdatum</td>
+        <td>Enddatum</td>
+        <td>Löschen</td>
+      </tr>
+      {% for g in gAktionen %}
+      <tr class="generelle">
+        <td>{{g.id}}</td>
+        <td>{{g.prozent}}</td>
+        <td>{{g.startDatum}}</td>
+        <td>{{g.endDatum}}</td>
+        <td><a href="{{'deleteAktionGenerell'}}/{{g.id}}"> Löschen</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  <h3> Fahrtstrecken Aktionen</h3>
+  <table>
+    <tr class="row">
+      <td>ID</td>
+      <td>Prozent</td>
+      <td>Startdatum</td>
+      <td>Enddatum</td>
+      <td>Fahrtstrecke</td>
+      <td>Löschen</td>
+    </tr>
+    {% for f in fAktionen %}
+    <tr class="fahrtstrecken">
+      <td>{{f.id}}</td>
+      <td>{{f.prozent}}</td>
+      <td>{{f.startDatum}}</td>
+      <td>{{f.endDatum}}</td>
+      <td>{{f.fahrtstrecke}}</td>
+      <td><a href="{{'deleteAktionFS'}}/{{f.id}}"> Löschen</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br></br>
+  <button type="button"><a href="{{'newAktionGen'}}">Neue Generelle Aktion</button> </a>
+  <p></p>
+  <button type="button"><a href="{{'newAktionFS'}}">Neue Fahrtstrecken Aktion</button> </a>
+
+{% endblock %}

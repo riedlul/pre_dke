@@ -7,6 +7,19 @@ from app import app,db
 class BuyTicketForm(FlaskForm):
     submit = SubmitField('Kaufen')
 
+class NewGenAktionForm(FlaskForm):
+    start_date = DateField('Startdatum: ', format='%Y-%m-%d', validators=[DataRequired()])
+    end_date = DateField('Enddatum: ', format='%Y-%m-%d', validators=[DataRequired()])
+    prozent = StringField('Prozent', validators=[DataRequired()])
+    submit = SubmitField('Erstellen')
+
+class NewFSAktionForm(FlaskForm):
+    fahrtstrecke = StringField('Fahrtstrecke', validators=[DataRequired()])
+    start_date = DateField('Startdatum: ', format='%Y-%m-%d', validators=[DataRequired()])
+    end_date = DateField('Enddatum: ', format='%Y-%m-%d', validators=[DataRequired()])
+    prozent = StringField('Prozent', validators=[DataRequired()])
+    submit = SubmitField('Erstellen')
+
 class StreckenauswahlForm(FlaskForm):
     strecken = db.session.query(Fahrtstrecke)
     strecke = []
