@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Abschnitte{% endblock %}
+{% block content %}
+<dif class="container">
+    <h1 class="py-5">Abschnitte</h1>
+    {% if current_user.admin == True %}
+        <form method="POST">
+          <br />
+           <label>neuer Abschnitt:</label></br>
+              <br />
+           <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_spurweite"
+              name="a_spurweite"
+              placeholder="Spurweite in m"
+            />
+          </div>
+           <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_lang"
+              name="a_lang"
+              placeholder="Länge in km"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_entgelt"
+              name="a_entgelt"
+              placeholder="Nutzungsentgelt in EUR"
+            />
+            </div>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="a_maxgesch"
+              name="a_maxgesch"
+              placeholder="Maximalgeschwindigkeit in km/h"
+            />
+            </div>
+              <div class="form-group">
+            <label for="a_start">von</label>
+              <select id="a_start" name="a_start" class="form-control">
+                  {% for b in bahnhöfe %}
+                    <option value="{{ b.id }}">{{ b.name }}, {{ b.address }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+            <div class="form-group">
+            <label for="a_end">bis</label>
+              <select id="a_end" name="a_end" class="form-control">
+                  {% for b in bahnhöfe %}
+                    <option value="{{ b.id }}">{{ b.name }}, {{ b.address }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+            <br />
+            <label>Warnungen auswählen:</label>
+          <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    {% for war in warnungen %}
+                        <label class="switch ">
+                            <input type="checkbox" name="warnung" class="danger"
+                                   value="{{ war.id }}">{{ war.warnung }}</label>
+                    <br>
+                    {% endfor %}
+                </li>
+          </ul>
+          <br />
+          <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
+        </form>
+    <hr />
+    {% endif %}
+    <u1 class="list-group list-group-flush" id="section-list">
+        {% for a in abschnitte %}
+            <li id="{{ a.id }}" class="entry list-group-item">
+                <li>
+                    <span class="field-value">Abschnitt von Startbahnhof {{ a.start.name }} bis Endbahnhof {{ a.end.name }}</span>
+                </li>
+                <li>
+                    <span class="field-name":>Spurweite:</span>
+                    <span class="field-value">{{ a.spurweite }}</span>
+                </li>
+                <li>
+                    <span class="field-name":>Entgelt:</span>
+                    <span class="field-value">{{ a.entgelt }}</span>
+                </li>
+                <li>
+                    <span class="field-name":>Länge der Strecke:</span>
+                    <span class="field-value">{{ a.lang }}</span>
+                </li>
+                 <li>
+                    <span class="field-name":>maximale Geschwindigkeit Zug:</span>
+                    <span class="field-value">{{ a.maxgesch}}</span>
+                </li>
+                 <li>
+                    <span class="field-name":>Warnungen:</span>
+                    <br>
+                     {% for s in a.abschnitt_warnung %}
+                    <span class="field-value">{{ s.abschnitt_warnung.warnung }}<br></span>
+                     {% endfor %}
+                </li>
+
+                 {% if current_user.admin == True %}
+                    <p>
+                        <a href="/bearbeitenAbschnitt/{{ a.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">BEARBEITEN |
+                        </a>
+                        <a href="/löschenAbschnitt/{{ a.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">LÖSCHEN
+                        </a>
+                    </p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </u1>
+</dif>
+<br />
+
+{% endblock %}
