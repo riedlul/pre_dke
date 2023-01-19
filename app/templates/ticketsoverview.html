@@ -8,6 +8,7 @@
 				<td>Nach</td>
 				<td>Preis</td>
 				<td>Status</td>
+				<td>Zug</td>
 				<td>Abfahrt</td>
 				<td>Ankunft</td>
 				<td>Sitzplatz J/N</td>
@@ -20,10 +21,17 @@
 				<td>{{t.ticket_endStation}}</td>
 				<td>{{t.ticket_preis}}</td>
 				<td>{{t.ticket_status}}</td>
+				<td>{{t.fahrtdurchführung_zugname}}</td>
 				<td>{{t.fahrtdurchführung_startDatum}}</td>
 				<td>{{t.fahrtdurchführung_endDatum}}</td>
 				<td>{{t.ticket_sitzplatzreservierung}}</td>
-				<td><a href="{{'reserveSeat'}}/{{t.ticket_id}}"> Reservieren</a></td>
+				{% if t.ticket_status!='storniert' %}
+					{% if t.ticket_sitzplatzreservierung==0 %}
+						<td><a href="{{'reserveSeat'}}/{{t.ticket_id}}"> Reservieren</a></td>
+					{% else %}
+						<td> Bereits Sitz reserviert</td>
+					{% endif %}	
+				{% endif %}			
 				{% if t.ticket_status!='storniert' %}
 				<td><a href="{{'cancel_ticket'}}/{{t.ticket_id}}"> stornieren</a></td>
 				{% endif %}

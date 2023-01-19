@@ -47,7 +47,7 @@ def overview():
                     db.session.commit()
                 except:
                     print("bing bap")'''
-    alltickets = db.session.execute('SELECT ticket.sitzplatzreservierung AS ticket_sitzplatzreservierung, ticket.id AS ticket_id, ticket.userid AS ticket_userid, ticket."startStation" AS "ticket_startStation", ticket."endStation" AS "ticket_endStation", ticket."fahrtdurchführung" AS "ticket_fahrtdurchführung", ticket.preis AS ticket_preis, ticket.status AS ticket_status, "fahrtdurchführung".id AS "fahrtdurchführung_id", "fahrtdurchführung"."startDatum" AS "fahrtdurchführung_startDatum", "fahrtdurchführung"."endDatum" AS "fahrtdurchführung_endDatum", "fahrtdurchführung".fahrtstrecke AS "fahrtdurchführung_fahrtstrecke", "fahrtdurchführung".richtung AS "fahrtdurchführung_richtung" FROM ticket JOIN "fahrtdurchführung" ON ticket."fahrtdurchführung" = "fahrtdurchführung".id WHERE ticket.userid = ' + str(current_user.id))
+    alltickets = db.session.execute('SELECT ticket.sitzplatzreservierung AS ticket_sitzplatzreservierung, ticket.id AS ticket_id, ticket.userid AS ticket_userid, ticket."startStation" AS "ticket_startStation", ticket."endStation" AS "ticket_endStation", ticket."fahrtdurchführung" AS "ticket_fahrtdurchführung", ticket.preis AS ticket_preis, ticket.status AS ticket_status, "fahrtdurchführung".id AS "fahrtdurchführung_id","fahrtdurchführung"."zugname" AS "fahrtdurchführung_zugname", "fahrtdurchführung"."startDatum" AS "fahrtdurchführung_startDatum", "fahrtdurchführung"."endDatum" AS "fahrtdurchführung_endDatum", "fahrtdurchführung".fahrtstrecke AS "fahrtdurchführung_fahrtstrecke", "fahrtdurchführung".richtung AS "fahrtdurchführung_richtung" FROM ticket JOIN "fahrtdurchführung" ON ticket."fahrtdurchführung" = "fahrtdurchführung".id WHERE ticket.userid = ' + str(current_user.id))
     now = datetime.utcnow()
     
                
@@ -165,7 +165,12 @@ def fahrplan():
             preis=10+(endReihung-startReihung)*10
             preis=abs(preis)
             if request.method == 'POST':
-                if maxProzent>0: preis=preis*(maxProzent/100)
+                maxProzent=float(maxProzent)
+                if maxProzent>0:
+                    print(float(maxProzent)) 
+                    print(preis)
+                    preis=preis-preis*(maxProzent/100.0)
+                    print(preis)
                 return render_template('fahrplan.html',startInst=startInst, endInst=endInst, preis=preis, durchfuehrungen=df,form=form)
             elif request.method == 'GET':
                 return render_template('fahrplan.html')
