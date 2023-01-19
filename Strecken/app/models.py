@@ -54,6 +54,12 @@ class BahnhofSchema(marsh.SQLAlchemyAutoSchema):
 bahnhof_schema = BahnhofSchema()
 bahnhofe_schema = BahnhofSchema(many=True)
 
+
+warnungen = db.Table('warnungen',
+                    db.Column('warnung_model_id', db.Integer, db.ForeignKey('warnung_model.id'), primary_key=True),
+                    db.Column('abschnitt_model_id', db.Integer, db.ForeignKey('abschnitt_model.id'), primary_key=True)
+                    )
+
 class AbschnittModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start = db.relationship('BahnhofModel', foreign_keys='AbschnittModel.start_id')
@@ -65,8 +71,9 @@ class AbschnittModel(db.Model):
     lang = db.Column(db.Integer, nullable=False)
     maxgesch = db.Column(db.Integer, nullable=False)
     abschnitt_warnung = db.relationship('WarnungModel',
-                                       lazy='joined',
-                                       backref=db.backref('abschnitt', lazy='joined'))
+                                    secondary=warnungen,
+                                    lazy='dynamic',
+                                    backref=db.backref('warnungen', lazy=True))
 
     def __repr__(self):
         return f"Abschnitt(start {self.start}, end {self.end}, spurweite {self.spurweite}, " \
@@ -100,16 +107,11 @@ class StreckenModel(db.Model):
 class WarnungModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     warnung = db.Column(db.String(1000), nullable=False)
-    warnung_abschnitt = db.relationship('AbschnittModel', foreign_keys='WarnungModel.abschnitt_id')
-    abschnitt_id = db.Column(db.Integer, db.ForeignKey('abschnitt_model.id'))
 
     def __repr__(self):
         return {"id": self.id,
-                "warnung": self.warnung,
-                "warnung_abschnitt": self.warnung_abschnitt,
-                "abschnitt_id": self.abschnitt_id
+                "warnung": self.warnung
                 }
-
 
 
 class WarnungSchema(marsh.SQLAlchemyAutoSchema):

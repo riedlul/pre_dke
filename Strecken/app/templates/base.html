@@ -15,9 +15,9 @@
             <a class="nav-item nav-link" id="warnungen" href="/warnungen">Warnungen</a>
             <a class="nav-item nav-link" id="abschnitte" href="/abschnitte">Abschnitte</a>
             <a class="nav-item nav-link" id="strecken" href="/strecken">Strecken</a>
-                {% if current_user.admin == True %}
+            {% if current_user.admin == True %}
                     <a class="nav-item nav-link" id="mitarbeiter" href="/mitarbeiter">Mitarbeiter</a>
-                {% endif %}
+            {% endif %}
             <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% else %}
             <a class="nav-item nav-link" id="login" href="/login">Login</a>

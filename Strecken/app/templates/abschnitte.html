@@ -102,10 +102,11 @@
                  <li>
                     <span class="field-name":>Warnungen:</span>
                     <br>
-                    {% for a in a.abschnitt_warnung %}
-                    <span class="field-value">{{ a.abschnitt_warnung.warnung }}<br></span>
-                    {% endfor %}
+                     {% for s in a.abschnitt_warnung %}
+                    <span class="field-value">{{ s.abschnitt_warnung.warnung }}<br></span>
+                     {% endfor %}
                 </li>
+
                  {% if current_user.admin == True %}
                     <p>
                         <a href="/bearbeitenAbschnitt/{{ a.id }}"

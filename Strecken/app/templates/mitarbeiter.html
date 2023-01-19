@@ -2,7 +2,7 @@
 {% block title %}Mitarbeiter{% endblock %}
 {% block content %}
 <h1 class="py-5">Mitarbeiter</h1>
-    {% if current_user.admin == True %}
+
     <br />
         <form method="POST">
           <label>neuer Mitarbeiter:</label></br>
@@ -86,7 +86,7 @@
                 </li>
             {% endfor %}
             </u1>
-        {% endif %}
+
        {% if current_user.admin == False %}
         <u1 class="list-group list-group-flush" id="mitarbeiter-liste">
             {% for m in mitarbeiter %}

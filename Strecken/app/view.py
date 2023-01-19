@@ -73,8 +73,8 @@ def getAbschnitte():
         warnungen = []
 
         for a in a_warnungen:
-            abschnitt = AbschnittModel.query.get(a)
-            warnungen.append(abschnitt)
+            warnung = WarnungModel.query.get(a)
+            warnungen.append(warnung)
 
         neuerAbschnitt = AbschnittModel(start_id=a_start, end_id=a_end, spurweite=a_spurweite, entgelt=a_entgelt, lang=a_lang, maxgesch=a_maxgesch, abschnitt_warnung=warnungen)
         db.session.add(neuerAbschnitt)
@@ -197,11 +197,13 @@ def getStrecken():
         neueStrecke = StreckenModel(name=name, strecken_abschnitt=abschnitte)
         db.session.add(neueStrecke)
         db.session.commit()
+
         flash('Strecke hinzugefügt!', category='success')
         return redirect('/strecken')
 
     abschnitte = AbschnittModel.query.all()
     strecken = StreckenModel.query.all()
+
     return render_template("strecken.html", user=current_user, strecken=strecken, abschnitte=abschnitte)
 
 
