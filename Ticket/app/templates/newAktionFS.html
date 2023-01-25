@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <select name="selectVal" class="selectpicker form-control">
+    {% for fs in fsArray %}
+        <option value="{{ fs }}">{{ fs }}</option>
+    {% endfor %}
+  </select>
+  <p>
+      {{ form.prozent.label }}<br>
+      {{ form.prozent(size=32) }}<br>
+      {% for error in form.prozent.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+  </p>
+  <p>
+    {{ form.start_date.label }}<br>
+    {{ form.start_date(style='height: 25px;width: 115px') }}<br>
+  </p>
+  <p>
+    {{ form.end_date.label }}<br>
+    {{ form.end_date(style='height: 25px;width: 115px') }}<br>
+  </p>
+  <p>{{ form.submit() }}</p>
+</form>
+  
+{% endblock %}

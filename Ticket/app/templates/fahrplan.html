@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<table>
+    <tr>
+        <th>Von</th>
+        <th>Bis</th>
+        <th>Preis</th>
+        <th>Abfahrt</th>
+        <th>Zug</th>
+        <th>Sitzplätze</th>
+        <th>Kaufen</th>
+    </tr>
+    {% for d in durchfuehrungen %}
+        <tr>
+            <td>{{startInst.startBahnhof}}</td>
+            <td>{{endInst.endBahnhof}}</td>
+            {% if originalpreis != preis %}
+                <td><s>{{originalpreis}}</s><div style="background-color:green;color:white;">{{preis}}</div></td>
+            {% else %}
+                <td>{{preis}}</td>
+            {% endif %}
+            <td>{{d.startDatum}}</td>
+            <td>{{d.zugname}}</td>
+            <td>{{d.sitzplaetzeFrei}}</td>
+            <td><form method="POST" action="{{ url_for('buyticket',von=startInst.startBahnhof,nach=endInst.endBahnhof,preis=preis,fdID=d.id) }}">
+                {{ form.hidden_tag() }}
+                {{ form.submit() }}
+            </form>  </td>          
+        </tr>
+    {% endfor %}
+</table>    
+{% endblock %}
