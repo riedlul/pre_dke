@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Warnnungen{% endblock %}
+{% block content %}
+<dif>
+    <h1 class="py-5">Warnungen</h1>
+    {% if current_user.admin == True %}
+    <form method="POST">
+      <label>neue Warnung:</label></br>
+      <br />
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="war_warning"
+          name="war_warning"
+          placeholder="Warnung hinzufügen INKLUSIVE Beschreibung"
+        />
+      </div>
+      <br />
+      <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
+    </form>
+    <hr />
+    {% endif %}
+    <u1 class="list-group list-group-flush" id="warning-list">
+        {% for war in warnungen %}
+            <li id="{{ war.id }}" class="entry list-group-item">
+                    <span class="field-name":>Warnung:</span>
+                    <span class="field-value">{{ war.warnung }} </span>
+                </li>
+                    {% if current_user.admin == True %}
+                    <p>
+                        <a href="/bearbeitenWarnung/{{ war.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">BEARBEITEN |
+                        </a>
+                        <a href="/warnung_entfernen/{{ war.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">LÖSCHEN
+                        </a>
+                    </p>
+         {% endif %}
+            </li>
+        {% endfor %}
+
+    </u1>
+</dif>
+{% endblock %}
