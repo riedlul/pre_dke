@@ -305,7 +305,6 @@ def newAktionFS():
         fsString=str(i)+': '+startString+' nach '+endString
         fsArray.append(fsString)
         i=i+1
-    print(fsArray)
     if request.method == 'GET':
         return render_template('newAktionFS.html',form=fsForm,fsArray=fsArray)
     elif request.method == 'POST':
@@ -357,7 +356,7 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user.html', user=user)
 
-
+'''Profil (Name, EMail usw editieren)'''
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
