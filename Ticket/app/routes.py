@@ -45,12 +45,23 @@ def buyticket(von, nach, preis, fdID):
 @app.route("/ticketsoverview", methods=['GET', 'POST'])
 @login_required
 def overview():
+    now = datetime.utcnow() 
     alltickets = db.session.execute('SELECT ticket.sitzplatzreservierung AS ticket_sitzplatzreservierung, ticket.id AS ticket_id, ticket.userid AS ticket_userid, ticket."startStation" AS "ticket_startStation", ticket."endStation" AS "ticket_endStation", ticket."fahrtdurchführung" AS "ticket_fahrtdurchführung", ticket.preis AS ticket_preis, ticket.status AS ticket_status, "fahrtdurchführung".id AS "fahrtdurchführung_id","fahrtdurchführung"."zugname" AS "fahrtdurchführung_zugname", "fahrtdurchführung"."startDatum" AS "fahrtdurchführung_startDatum", "fahrtdurchführung"."endDatum" AS "fahrtdurchführung_endDatum", "fahrtdurchführung".fahrtstrecke AS "fahrtdurchführung_fahrtstrecke", "fahrtdurchführung".richtung AS "fahrtdurchführung_richtung" FROM ticket JOIN "fahrtdurchführung" ON ticket."fahrtdurchführung" = "fahrtdurchführung".id WHERE ticket.userid = ' + str(current_user.id))
-    now = datetime.utcnow()                   
+    #falls jetziger zeitpunkt von ticket nach enddatum der fd ist -> ticket status auf vergangen setzen
+    for t in alltickets:
+        fdID=t.ticket_fahrtdurchführung
+        allFDmitUser=db.session.query(Fahrtdurchführung).filter(Fahrtdurchführung.id==fdID)
+        for fdmU in allFDmitUser:
+            if fdmU.endDatum<now: 
+                ticket = Ticket.query.get(t.ticket_id)
+                ticket.status='vergangen'
+                
+    db.session.commit()
+    alltickets = db.session.execute('SELECT ticket.sitzplatzreservierung AS ticket_sitzplatzreservierung, ticket.id AS ticket_id, ticket.userid AS ticket_userid, ticket."startStation" AS "ticket_startStation", ticket."endStation" AS "ticket_endStation", ticket."fahrtdurchführung" AS "ticket_fahrtdurchführung", ticket.preis AS ticket_preis, ticket.status AS ticket_status, "fahrtdurchführung".id AS "fahrtdurchführung_id","fahrtdurchführung"."zugname" AS "fahrtdurchführung_zugname", "fahrtdurchführung"."startDatum" AS "fahrtdurchführung_startDatum", "fahrtdurchführung"."endDatum" AS "fahrtdurchführung_endDatum", "fahrtdurchführung".fahrtstrecke AS "fahrtdurchführung_fahrtstrecke", "fahrtdurchführung".richtung AS "fahrtdurchführung_richtung" FROM ticket JOIN "fahrtdurchführung" ON ticket."fahrtdurchführung" = "fahrtdurchführung".id WHERE ticket.userid = ' + str(current_user.id))
     form = BuyTicketForm()
     if request.method == 'GET':
         return render_template('ticketsoverview.html', user=user, now=now, form=form,tickets=alltickets)
-    return render_template("fahrplan.html", user=user)
+    return render_template('ticketsoverview.html', user=user, now=now, form=form,tickets=alltickets)
 
 '''Zeigt dem User alle Start und Endbahnhöfe an, und einen Datepicker um die gewünschte Reise buchen zu können'''
 @app.route('/bahnhofauswahl/', methods=['GET', 'POST'])
@@ -213,7 +224,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
+'''Registrierfunktion'''
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -229,6 +240,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+'''Sitz reservieren mit übergebener Ticket iD'''
 @app.route('/reserveSeat/<ticketID>', methods=['GET', 'POST'])
 @login_required
 def reserveSeat(ticketID):
@@ -256,6 +268,7 @@ def reserveSeat(ticketID):
         flash("Sitzplatz konnte nicht reserviert werden")
         return render_template('ticketsoverview.html')
 
+'''Aktionübersicht'''
 @app.route('/aktionen', methods=['GET', 'POST'])
 @login_required
 def aktionen():
@@ -263,6 +276,7 @@ def aktionen():
     fAktionen=db.session.query(FahrtstreckeAktion)
     return render_template('aktionen.html', gAktionen=gAktionen, fAktionen=fAktionen)
 
+'''Neue generelle Aktion erstellen'''
 @app.route('/newAktionGen/', methods=['GET', 'POST'])
 def newAktionGen():
     genForm=NewGenAktionForm()
@@ -277,6 +291,8 @@ def newAktionGen():
                 return redirect(url_for('aktionen'))
             except:
                 return redirect(url_for('aktionen'))
+
+'''Neue Fahrtstrecken Aktion erstellen'''
 @app.route('/newAktionFS/', methods=['GET', 'POST'])
 def newAktionFS():
     fsForm=NewFSAktionForm()
@@ -307,6 +323,8 @@ def newAktionFS():
         else: 
             flash("Aktion konnte nicht erstellt werden (Form does not validate)")
             return redirect(url_for('aktionen'))
+
+'''Generelle Aktion löschen mit gegebener Aktion ID'''
 @app.route('/deleteAktionGenerell/<aktion_id>/', methods=['GET', 'POST'])
 def deleteAktion(aktion_id):
     aktion = GenerelleAktion.query.get(aktion_id)
@@ -319,6 +337,7 @@ def deleteAktion(aktion_id):
         flash("Aktion konnte nicht gelöscht werden")
         return redirect(url_for('aktionen'))
 
+'''Fahrtstrecken Aktion löschen mit gegebener Aktion ID'''
 @app.route('/deleteAktionFS/<aktion_id>/', methods=['GET', 'POST'])
 def deleteAktionFS(aktion_id):
     aktion = FahrtstreckeAktion.query.get(aktion_id)
@@ -336,11 +355,7 @@ def deleteAktionFS(aktion_id):
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', user=user)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])

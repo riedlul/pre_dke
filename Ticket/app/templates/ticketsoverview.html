@@ -25,14 +25,14 @@
 				<td>{{t.fahrtdurchführung_startDatum}}</td>
 				<td>{{t.fahrtdurchführung_endDatum}}</td>
 				<td>{{t.ticket_sitzplatzreservierung}}</td>
-				{% if t.ticket_status!='storniert' %}
+				{% if ((t.ticket_status!='storniert') and (t.ticket_status!='vergangen')) %}
 					{% if t.ticket_sitzplatzreservierung==0 %}
 						<td><a href="{{'reserveSeat'}}/{{t.ticket_id}}"> Reservieren</a></td>
 					{% else %}
 						<td> Bereits Sitz reserviert</td>
 					{% endif %}	
 				{% endif %}			
-				{% if t.ticket_status!='storniert' %}
+				{% if ((t.ticket_status!='storniert') and (t.ticket_status!='vergangen')) %}
 				<td><a href="{{'cancel_ticket'}}/{{t.ticket_id}}"> stornieren</a></td>
 				{% endif %}
 			</tr>
