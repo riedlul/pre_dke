@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Abschnitte{% endblock %}
+{% block content %}
+<dif class="container">
+        <form method="POST">
+          <br />
+           <label>neue Warnungen auswählen:</label></br>
+              <br />
+          <ul class="list-group list-group-flush">
+              {% for war in warnungen %}
+              <input type="checkbox" name="warnung" class="danger"
+                     value="{{ war.id }}">{{ war.warnung }}
+              <br>
+              {% endfor %}
+
+          </ul>
+          <br />
+          <button type="add" class="btn btn-primary">ÄNDERN</button>
+        </form>
+    <hr />
+
+
+</dif>
+<br />
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}bearbeitenBahnhofAbschnitt{% endblock %}
+{% block content %}
+<dif class="container">
+        <form method="POST">
+          <br />
+           <label>Bahnhöfe in Abschnitt ändern:</label></br>
+              <br />
+
+            </div>
+              <div class="form-group">
+            <label for="a_start">von</label>
+              <select id="a_start" name="a_start" class="form-control">
+                  {% for b in bahnhöfe %}
+                    <option value="{{ b.id }}">{{ b.name }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+            <div class="form-group">
+            <label for="a_end">bis</label>
+              <select id="a_end" name="a_end" class="form-control">
+                  {% for b in bahnhöfe %}
+                    <option value="{{ b.id }}">{{ b.name }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+            <br />
+
+          <br />
+          <button type="add" class="btn btn-primary">ÄNDERN</button>
+        </form>
+    <hr />
+</u1>
+</dif>
+<br />
+{% endblock %}
