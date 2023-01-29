@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Mitarbeiter{% endblock %}
+{% block content %}
+<h1 class="py-5">Mitarbeiter</h1>
+    <br />
+        <form method="POST">
+          <label>neuer Mitarbeiter:</label></br>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="m_vorname"
+              name="m_vorname"
+              placeholder="Vorname"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="m_nachname"
+              name="m_nachname"
+              placeholder="Nachname"
+            />
+          </div>
+            <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="m_geburtstag"
+              name="m_geburtstag"
+              placeholder="Geburtstag"
+            />
+          </div>
+         <div class="form-group">
+            <input
+              type="email"
+              class="form-control"
+              id="m_email"
+              name="m_email"
+              placeholder="E-Mail Adresse"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control"
+              id="m_passwort"
+              name="m_passwort"
+              placeholder="Passwort"
+            />
+          </div>
+          <br />
+          <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
+        </form>
+        <hr />
+        <h3 class="py-5">Mitarbeiter:</h3>
+        <u1 class="list-group list-group-flush" id="mitarbeiter-liste">
+            {% for m in mitarbeiter %}
+                <li class="list-group-item">
+                    <li>
+                        <span class="field-name">Name:</span>
+                        <span class="field-value">{{ m.vorname }} {{ m.nachname }}</span>
+                    </li>
+                    <li>
+                        <span class="field-name">E-Mail Adresse:</span>
+                        <span class="field-value">{{ m.email }}</span>
+                    </li>
+                    <li>
+                        <span class="field-name">Geburtstag:</span>
+                        <span class="field-value">{{ m.geburtstag }}</span>
+                    </li>
+                    <li>
+                        <p>
+                            <a href="/bearbeitenMitarbeiter/{{ m.id }}"
+                               class="btn btn-primary btn-lg-active"
+                               role="button" aria-pressed="true">BEARBEITEN |
+                            </a>
+                            <a href="/löschenMitarbeiter/{{ m.id }}"
+                               class="btn btn-primary btn-lg-active"
+                               role="button" aria-pressed="true">LÖSCHEN
+                            </a>
+                        </p>
+                    </li>
+                </li>
+            {% endfor %}
+            </u1>
+
+{% endblock %}
