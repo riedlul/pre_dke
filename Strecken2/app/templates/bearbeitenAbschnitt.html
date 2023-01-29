@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.spurweite.label(class="form-label") }} <br>
+        {{ form.spurweite(class="form-control", size=30) }} <br>
+    </p>
+    <p>
+        {{ form.entgelt.label(class="form-label") }} <br>
+        {{ form.entgelt(class="form-control", size=30) }} <br>
+    </p>
+    <p>
+        {{ form.lang.label(class="form-label") }} <br>
+        {{ form.lang(class="form-control", size=30) }} <br>
+    </p>
+    <p>
+        {{ form.maxgesch.label(class="form-label") }} <br>
+        {{ form.maxgesch(class="form-control", size=30) }} <br>
+    </p>
+    <p>{{ form.submit(class="form-control") }}</p>
+</form>
+{% endblock %}

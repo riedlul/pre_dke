@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Bahnhöfe{% endblock %}
+{% block content %}
+    <h1 class="py-5">Bahnhöfe</h1>
+    {% if current_user.admin == True %}
+       <form method="POST">
+          <br />
+          <div class="form-group">
+            <label for="b_name">neuer Bahnhof:</label></br>
+            <input
+              type="text"
+              class="form-control"
+              id="b_name"
+              name="b_name"
+              placeholder="Name"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="b_address"
+              name="b_address"
+              placeholder="Adresse"
+            />
+          </div></br>
+          <button type="add" class="btn btn-primary">HINZUFÜGEN</button>
+          <br />
+          <br />
+        </form>
+    <hr />
+    {% endif %}
+    <u1 class="list-group list-group-flush" id="bahnhöfe-liste">
+        {% for b in bahnhöfe %}
+            <li class="list-group-item">
+                <li>
+                    <span class="field-name">Bahnhof:</span>
+                    <span class="field-value">{{ b.name }}</span>
+                </li>
+                <li>
+                    <span class="field-name">Adresse:</span>
+                    <span class="field-value">{{ b.adresse }}</span>
+                    {% if current_user.admin == True %}
+                    <p>
+                        <a href="/bearbeitenBahnhof/{{ b.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">BEARBEITEN |
+                        </a>
+                        <a href="/löschenBahnhof/{{ b.id }}"
+                           class="btn btn-primary btn-lg-active"
+                           role="button" aria-pressed="true">LÖSCHEN
+                        </a>
+                    </p>
+                    {% endif %}
+                    </form>
+                    <hr />
+                    <br />
+                </li>
+            </form>
+
+            </li>
+        {% endfor %}
+    </u1>
+<br />
+{% endblock %}
